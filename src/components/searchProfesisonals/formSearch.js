@@ -20,26 +20,18 @@ export default function ComplexGrid() {
   const [redirect, setRedirect] = useState(false);
 
   const [selectedDate, setSelectedDate] = React.useState(
-    `${new Date()
-      .toISOString()
-      .replace(/T.*/, "")
-      .split("-")
-      .reverse()
-      .join("-")}`
+    new Date()
   );
 
   const handleDateChange = date => {
+    
     setSelectedDate(
       date
-        .toISOString()
-        .replace(/T.*/, "")
-        .split("-")
-        .reverse()
-        .join("-")
     );
   };
 
   const handleSearch = () => {
+    // console.log(selectedDate.getMonth()+1);
     setRedirect(true);
   }
 
@@ -94,7 +86,7 @@ export default function ComplexGrid() {
                   margin="normal"
                   id="date-picker-dialog"
                   label="Seleccionar una fecha"
-                  format="dd-MM-yyyy"
+                  format="dd/MM/yyyy"
                   value={selectedDate}
                   onChange={handleDateChange}
                   KeyboardButtonProps={{
