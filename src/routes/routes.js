@@ -5,6 +5,6 @@ import ListProfessionals from '../views/listProfessionals/index';
 
 export default () => (
     <Switch>
-      <Route exact path="/" component={ListProfessionals} />
+      <Route exact path="/listProfessionals" component={ListProfessionals} />
     </Switch>
   );

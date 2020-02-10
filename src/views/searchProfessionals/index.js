@@ -5,6 +5,7 @@ import { Grid } from "@material-ui/core";
 import FormSearch from '../../components/searchProfesisonals/formSearch';
 import CopyRight from '../../components/copyright/index';
 import styles from './styles.css';
+import { BrowserRouter } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => (styles(theme)));
 

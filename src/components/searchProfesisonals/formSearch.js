@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -12,6 +12,7 @@ import {
 } from "@material-ui/pickers";
 import { Redirect, BrowserRouter } from 'react-router-dom';
 import ListProfessionals from '../../views/listProfessionals/index';
+import { getProfessions } from '../../factroy/professions';
 
 const useStyles = makeStyles(theme => styles(theme));
 
@@ -19,25 +20,39 @@ export default function ComplexGrid() {
   const classes = useStyles();
   const [redirect, setRedirect] = useState(false);
 
+  const [professions, setProfessions] = React.useState([]);
+
+  useEffect(() => {
+    async function loadProfessions() {
+      try {
+        const professions = await getProfessions();
+        setProfessions(professions);
+
+        console.log(professions);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    loadProfessions();
+
+  }, [])
+
   const [selectedDate, setSelectedDate] = React.useState(
     new Date()
   );
 
   const handleDateChange = date => {
-    
+
     setSelectedDate(
       date
     );
   };
 
   const handleSearch = () => {
-    // console.log(selectedDate.getMonth()+1);
     setRedirect(true);
   }
 
-  console.log(redirect);
-
-  if(redirect) return <ListProfessionals></ListProfessionals>
+  if (redirect) return <ListProfessionals></ListProfessionals>
 
   return (
     <Paper
@@ -67,14 +82,15 @@ export default function ComplexGrid() {
               value={"0"}
             >
               <MenuItem key={"0"} value={"0"}>
-                Educación
+                Seleccione
               </MenuItem>
-              <MenuItem key={"1"} value={"1"}>
-                Salud
-              </MenuItem>
-              <MenuItem key={"2"} value={"2"}>
-                Nutrición
-              </MenuItem>
+              {
+                professions.map((e, i) =>
+                  <MenuItem key={`pro_${i}`} value={e.id}>
+                    {e.name}
+                  </MenuItem>
+                )
+              }
             </TextField>
           </Grid>
 
