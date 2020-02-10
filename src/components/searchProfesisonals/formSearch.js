@@ -28,7 +28,7 @@ export default function ComplexGrid() {
         const professions = await getProfessions();
         setProfessions(professions);
 
-        console.log(professions);
+        // console.log(professions);
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +52,7 @@ export default function ComplexGrid() {
     setRedirect(true);
   }
 
-  if (redirect) return <ListProfessionals></ListProfessionals>
+  if (redirect) return <Redirect to="/listProfessionals" />
 
   return (
     <Paper
