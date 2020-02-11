@@ -10,6 +10,7 @@ import { List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { AppContext } from "../../context/ListProfessionalsContext";
+import { AppContextSearchProfessional } from "../../context/searchProfessionalsContext";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,6 +26,10 @@ export default function AlignItemsList() {
   const classes = useStyles();
 
   const { setopenFullScreenModal, setProfessionalSelected } = useContext(AppContext);
+  const { valuesForm } = useContext(AppContextSearchProfessional);
+
+  console.log(valuesForm);
+
   const data = [
     {
       name: "Juan perez",

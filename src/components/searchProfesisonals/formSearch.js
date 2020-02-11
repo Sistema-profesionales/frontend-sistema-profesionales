@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import DateFnsUtils from "@date-io/date-fns";
-import { MenuItem, Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button } from "@material-ui/core";
 import styles from "./styles.css";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import { Redirect, BrowserRouter } from 'react-router-dom';
-import ListProfessionals from '../../views/listProfessionals/index';
+import { Redirect } from 'react-router-dom';
 import { getProfessions } from '../../factory/professions';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { AppContextSearchProfessional } from '../../context/searchProfessionalsContext';
 
 const useStyles = makeStyles(theme => styles(theme));
 
@@ -22,13 +23,17 @@ export default function ComplexGrid() {
 
   const [professions, setProfessions] = React.useState([]);
 
+  const { valuesForm, setValuesForm } = useContext(AppContextSearchProfessional);
+
   useEffect(() => {
     async function loadProfessions() {
       try {
         const professions = await getProfessions();
+        for (let i = 0; i < professions.length; i++) {
+          professions[i]["title"] = professions[i]["name"];
+        }
         setProfessions(professions);
 
-        // console.log(professions);
       } catch (error) {
         console.log(error);
       }
@@ -41,6 +46,8 @@ export default function ComplexGrid() {
     new Date()
   );
 
+  const [value, setValue] = React.useState(null);
+
   const handleDateChange = date => {
 
     setSelectedDate(
@@ -49,7 +56,13 @@ export default function ComplexGrid() {
   };
 
   const handleSearch = () => {
-    setRedirect(true);
+    setValuesForm({
+      date: selectedDate,
+      profession: value.name
+    });
+
+    console.log(valuesForm);
+    // setRedirect(true);
   }
 
   if (redirect) return <Redirect to="/listProfessionals" />
@@ -74,27 +87,30 @@ export default function ComplexGrid() {
       </Typography>
       <React.Fragment>
         <Grid container spacing={2} style={{ flexGrow: 1 }}>
-          <Grid item sm={2} xs={4}>
-            <TextField
-              select
-              name="profesiones"
-              label="Profesiones"
-              value={"0"}
-            >
-              <MenuItem key={"0"} value={"0"}>
-                Seleccione
-              </MenuItem>
-              {
-                professions.map((e, i) =>
-                  <MenuItem key={`pro_${i}`} value={e.id}>
-                    {e.name}
-                  </MenuItem>
-                )
-              }
-            </TextField>
+          <Grid item>
+            <Autocomplete
+              id="fixed-tags-demo"
+              options={professions}
+              getOptionLabel={option => option.title}
+              value={value}
+              onChange={(event, newValue) => {
+                
+                setValue(newValue);
+              }}
+              style={{ width: 200 }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Profesiones"
+                  variant="outlined"
+                  placeholder="Buscar"
+                  fullWidth
+                />
+              )}
+            />
           </Grid>
 
-          <Grid item sm={7} xs={8}>
+          <Grid item>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid container justify="space-around">
                 <KeyboardDatePicker
@@ -113,15 +129,16 @@ export default function ComplexGrid() {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={2} xs={5}>
+          <Grid item>
             <Button
               variant="contained"
               color="primary"
               size="small"
               className={classes.button}
-              style={{ marginTop: "15px" }}
+              style={{ marginTop: "0px", padding: '10px' }}
               startIcon={<SearchIcon />}
               onClick={handleSearch}
+              
             >
               Buscar
             </Button>
