@@ -12,7 +12,7 @@ import {
 } from "@material-ui/pickers";
 import { Redirect, BrowserRouter } from 'react-router-dom';
 import ListProfessionals from '../../views/listProfessionals/index';
-import { getProfessions } from '../../factroy/professions';
+import { getProfessions } from '../../factory/professions';
 
 const useStyles = makeStyles(theme => styles(theme));
 
