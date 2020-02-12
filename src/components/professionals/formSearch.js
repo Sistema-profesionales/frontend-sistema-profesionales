@@ -13,7 +13,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { getProfessions } from '../../factory/professions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { AppContextSearchProfessional } from '../../context/searchProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
+import ListProfessionals from './listItems';
 
 const useStyles = makeStyles(theme => styles(theme));
 
@@ -62,10 +63,10 @@ export default function ComplexGrid() {
     });
 
     console.log(valuesForm);
-    // setRedirect(true);
+    setRedirect(true);
   }
 
-  if (redirect) return <Redirect to="/listProfessionals" />
+  if (redirect) return (<ListProfessionals />)
 
   return (
     <Paper

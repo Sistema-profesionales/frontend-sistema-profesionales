@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { AppContext } from '../../context/ListProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FullScreenDialog() {
   const classes = useStyles();
-  const { openFullScreenModal, setopenFullScreenModal, professionalSelected } = useContext(AppContext);
+  const { openFullScreenModal, setopenFullScreenModal, professionalSelected } = useContext(AppContextSearchProfessional);
 
   return (
     <div>
