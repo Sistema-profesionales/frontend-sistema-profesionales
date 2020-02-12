@@ -10,11 +10,10 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import { Redirect } from 'react-router-dom';
 import { getProfessions } from '../../factory/professions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
-import ListProfessionals from './listItems';
+import ListProfessionals from './listProfessionals';
 
 const useStyles = makeStyles(theme => styles(theme));
 
