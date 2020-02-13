@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -48,6 +48,26 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
   const classes = useStyles();
+
+  const data = {
+    "login": "camilo",
+    "pass": "1234",
+    "entityId": null
+  }
+
+  const [isValid, setIsvalid] = useState(undefined); 
+
+  const handleLogin = () => { 
+    if(data.entityId) {
+      setIsvalid(true);
+      console.log(data);
+    } else {
+      setIsvalid(false);
+    }
+   }
+
+  if(!isValid && isValid !== undefined)  window.location.href = "/user/professional";
+  if(isValid && isValid !== undefined) window.location.href = "/user/entity";
 
   return (
     <Container component="main" maxWidth="xs">
@@ -92,11 +112,12 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleLogin}
           >
             Ingresar
           </Button>
