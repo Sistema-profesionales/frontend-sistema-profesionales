@@ -19,11 +19,11 @@ const useStyles = makeStyles(theme => styles(theme));
 
 export default function ComplexGrid() {
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
 
   const [professions, setProfessions] = React.useState([]);
 
-  const { valuesForm, setValuesForm } = useContext(AppContextSearchProfessional);
+  const { valuesForm, setValuesForm, redirect, setRedirect } = useContext(AppContextSearchProfessional);
 
   useEffect(() => {
     async function loadProfessions() {
@@ -58,14 +58,15 @@ export default function ComplexGrid() {
   const handleSearch = () => {
     setValuesForm({
       date: selectedDate,
-      profession: value.name
+      profession: value ? value.name : ''
     });
 
-    console.log(valuesForm);
     setRedirect(true);
   }
 
-  if (redirect) return (<ListProfessionals />)
+  if (redirect) return (
+      <ListProfessionals />
+  );
 
   return (
     <Paper
@@ -87,7 +88,7 @@ export default function ComplexGrid() {
       </Typography>
       <React.Fragment>
         <Grid container spacing={2} style={{ flexGrow: 1 }}>
-          <Grid item>
+          <Grid item style={{ width: '30%' }}>
             <Autocomplete
               id="fixed-tags-demo"
               options={professions}
@@ -97,7 +98,7 @@ export default function ComplexGrid() {
                 
                 setValue(newValue);
               }}
-              style={{ width: 200 }}
+              style={{ width: '100%' }}
               renderInput={params => (
                 <TextField
                   {...params}
@@ -110,11 +111,11 @@ export default function ComplexGrid() {
             />
           </Grid>
 
-          <Grid item>
+          <Grid item style={{ width: '30%' }}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid container justify="space-around">
                 <KeyboardDatePicker
-                  style={{ marginTop: 0 }}
+                  style={{ marginTop: 0, width: '100%' }}
                   margin="normal"
                   id="date-picker-dialog"
                   label="Seleccionar una fecha"
@@ -129,13 +130,13 @@ export default function ComplexGrid() {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item>
+          <Grid item style={{ width: '25%' }}>
             <Button
               variant="contained"
               color="primary"
               size="small"
               className={classes.button}
-              style={{ marginTop: "0px", padding: '10px' }}
+              style={{ marginTop: "0px", padding: '10px', width: '100%' }}
               startIcon={<SearchIcon />}
               onClick={handleSearch}
               

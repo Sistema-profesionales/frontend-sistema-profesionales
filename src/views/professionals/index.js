@@ -7,6 +7,7 @@ export default function SearchProfessionals() {
   const [openFullScreenModal, setopenFullScreenModal] = useState(false);
   const [professionalSelected, setProfessionalSelected] = useState(undefined);
   const [redirect, setRedirect] = useState(false);
+  
   return (
     <AppContextSearchProfessional.Provider value={{
       valuesForm,

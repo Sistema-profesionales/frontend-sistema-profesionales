@@ -9,9 +9,10 @@ import Avatar from "@material-ui/core/Avatar";
 import { List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-// import { AppContext } from "../../context/ListProfessionalsContext";
 import { AppContextSearchProfessional } from "../../context/AppProfessionalsContext";
-import ViewDisponibility from './viewDisponibility';
+import ViewDisponibility from "./viewDisponibility";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,26 +26,30 @@ const useStyles = makeStyles(theme => ({
 
 export default function AlignItemsList() {
   const classes = useStyles();
-
-  // const { setopenFullScreenModal, setProfessionalSelected } = useContext(AppContext);
-  const { setProfessionalSelected, setopenFullScreenModal, valuesForm } = useContext(AppContextSearchProfessional);
-
-  console.log(valuesForm);
+  const {
+    setProfessionalSelected,
+    setopenFullScreenModal,
+    valuesForm,
+    setRedirect
+  } = useContext(AppContextSearchProfessional);
 
   const data = [
     {
+      id: 1,
       name: "Juan perez",
       img: "/img/avatars/1.jpg",
       comune: "Lota - Chile",
       ranking: 5
     },
     {
+      id: 2,
       name: "Javier Alvarez",
       img: "/img/avatars/2.jpg",
       comune: "Penco - Chile",
       ranking: 3
     },
     {
+      id: 3,
       name: "Maria Nuñez",
       img: "/img/avatars/3.jpg",
       comune: "Concepción - Chile",
@@ -53,6 +58,15 @@ export default function AlignItemsList() {
   ];
   return (
     <React.Fragment>
+      <Typography variant="h6" component="h2" style={{ padding: "20px" }}>
+        {`Profesionales disponibles para la profesión de ${
+          valuesForm && valuesForm.profession ? valuesForm.profession : ""
+        }, para la fecha  ${
+          valuesForm && valuesForm.date
+            ? new Date(valuesForm.date).toISOString().split("T")[0]
+            : ""
+        }`}
+      </Typography>
       <List className={classes.root}>
         {data.map((e, i) => (
           <div key={i}>
@@ -77,7 +91,7 @@ export default function AlignItemsList() {
                       color="textPrimary"
                     >
                       Ali Connors
-                  </Typography>
+                    </Typography>
                     {e.comune}
                   </React.Fragment>
                 }
@@ -86,9 +100,9 @@ export default function AlignItemsList() {
                 <Rating
                   name="simple-controlled"
                   value={e.ranking}
-                // onChange={(event, newValue) => {
-                //   setValue(newValue);
-                // }}
+                  // onChange={(event, newValue) => {
+                  //   setValue(newValue);
+                  // }}
                 />
               </Box>
             </ListItem>
@@ -96,8 +110,10 @@ export default function AlignItemsList() {
           </div>
         ))}
       </List>
+      <Icon onClick={e => setRedirect(false)}>
+        <ArrowBackIcon style={{ fontSize: "50px", float: "right", cursor: 'pointer' }} />
+      </Icon>
       <ViewDisponibility />
     </React.Fragment>
-
   );
 }
