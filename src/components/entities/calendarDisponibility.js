@@ -1,6 +1,7 @@
 
 import React, { useContext } from 'react';
 import { AppContextViewDisponibility } from '../../context/AppViewDisponibilityContext';
+import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '../../../node_modules/react-big-calendar/lib/sass/styles.scss';
@@ -8,6 +9,7 @@ import '../../../node_modules/react-big-calendar/lib/sass/styles.scss';
 export default function CalendarDisponibility() {
     const localizer = momentLocalizer(moment);
     const { events, setEventsCalendar } = useContext(AppContextViewDisponibility);
+    const { valuesForm } = useContext(AppContextSearchProfessional);
 
 
     const handleSelect = ({ start, end }) => {
@@ -24,19 +26,27 @@ export default function CalendarDisponibility() {
             )
     }
 
-    
+    const onSelectEvent = (event) => {
+        // console.log({ event, date: valuesForm.date });
+        let eventsAux = events;
+        let findIndex = eventsAux.findIndex(x => x.id === event.id);
+
+        eventsAux.splice(findIndex, 1);
+        setEventsCalendar(eventsAux);
+        console.log(findIndex);
+    }
 
     return (
         <React.Fragment>
             <Calendar
                 style={{ padding: '40px' }}
-                selectable
+                // selectable
                 localizer={localizer}
                 events={events}
                 defaultView={Views.MONTH}
                 scrollToTime={new Date(1970, 1, 1, 6)}
-                defaultDate={new Date()}
-                onSelectEvent={event => alert(event.title)}
+                defaultDate={valuesForm.date}
+                onSelectEvent={onSelectEvent}
                 onSelectSlot={handleSelect}
             />
         </React.Fragment>

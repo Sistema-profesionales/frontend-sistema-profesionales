@@ -52,7 +52,7 @@ export default function SignUp() {
   const data = {
     "login": "camilo",
     "pass": "1234",
-    "entityId": 1
+    "entityId": null
   }
 
   const [isValid, setIsvalid] = useState(undefined); 
