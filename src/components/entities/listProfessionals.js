@@ -9,7 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { AppContextSearchProfessional } from "../../context/AppProfessionalsContext";
+import { AppContextSearchProfessional } from "../../context/AppEntitiesContext";
 import ViewDisponibility from "./viewDisponibility";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Icon from "@material-ui/core/Icon";

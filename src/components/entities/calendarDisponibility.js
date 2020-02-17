@@ -1,7 +1,7 @@
 
 import React, { useContext } from 'react';
 import { AppContextViewDisponibility } from '../../context/AppViewDisponibilityContext';
-import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '../../../node_modules/react-big-calendar/lib/sass/styles.scss';

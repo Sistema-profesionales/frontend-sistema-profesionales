@@ -12,7 +12,7 @@ import {
 } from "@material-ui/pickers";
 import { getProfessions } from '../../factory/professions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 import ListProfessionals from './listProfessionals';
 
 const useStyles = makeStyles(theme => styles(theme));

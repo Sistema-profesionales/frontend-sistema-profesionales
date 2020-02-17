@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FormSearch from '../../components/entities/formSearch';
-import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 
 export default function SearchProfessionals() {
   const [valuesForm, setValuesForm] = useState(null);

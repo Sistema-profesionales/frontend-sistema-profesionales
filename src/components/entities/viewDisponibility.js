@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { AppContextSearchProfessional } from '../../context/AppProfessionalsContext';
+import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 import { AppContextViewDisponibility } from '../../context/AppViewDisponibilityContext';
 import CalendarDisponibility from './calendarDisponibility';
 import events from './events';
