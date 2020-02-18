@@ -7,35 +7,30 @@ import EntityTheme from "./components/themes/entities/entitiesTheme";
 import ProfessionalTheme from "./components/themes/professionals/professionalsTheme";
 
 function App() {
-  return (
-    <DefaultTheme>
-      <Routes></Routes>
-    </DefaultTheme>
-  );
   // console.log(window.location);
-  // if (window.location.pathname != "/") {
-  //   if (window.location.pathname.includes("/user/entity")) {
-  //     return (
-  //       <EntityTheme>
-  //         <RoutesEntity></RoutesEntity>
-  //       </EntityTheme>
-  //     );
-  //   }
+  if (window.location.pathname != "/") {
+    if (window.location.pathname.includes("/user/entity")) {
+      return (
+        <EntityTheme>
+          <RoutesEntity></RoutesEntity>
+        </EntityTheme>
+      );
+    }
 
-  //   if (window.location.pathname.includes("/user/professional")) {
-  //     return (
-  //       <ProfessionalTheme>
-  //         <RoutesProfessionals></RoutesProfessionals>
-  //       </ProfessionalTheme>
-  //     );
-  //   }
-  // } else {
-  //   return (
-  //     <DefaultTheme>
-  //       <Routes></Routes>
-  //     </DefaultTheme>
-  //   );
-  // }
+    if (window.location.pathname.includes("/user/professional")) {
+      return (
+        <ProfessionalTheme>
+          <RoutesProfessionals></RoutesProfessionals>
+        </ProfessionalTheme>
+      );
+    }
+  } else {
+    return (
+      <DefaultTheme>
+        <Routes></Routes>
+      </DefaultTheme>
+    );
+  }
 }
 
 export default App;
