@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -94,8 +94,7 @@ export default function ComplexGrid() {
               options={professions}
               getOptionLabel={option => option.title}
               value={value}
-              onChange={(event, newValue) => {
-                
+              onChange={(event, newValue) => { 
                 setValue(newValue);
               }}
               style={{ width: '100%' }}

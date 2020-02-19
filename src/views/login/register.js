@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 // function Copyright() {
 //   return (
@@ -61,7 +62,7 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
                 name="firstName"
@@ -107,6 +108,112 @@ export default function SignUp() {
                 autoComplete="current-password"
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={[]}
+                // getOptionLabel={option => option.title}
+                value={null}
+                onChange={(event, newValue) => {
+                  // setValue(newValue);
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Regiones"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={[]}
+                // getOptionLabel={option => option.title}
+                value={null}
+                onChange={(event, newValue) => {
+                  // setValue(newValue);
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Provincias"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={[]}
+                // getOptionLabel={option => option.title}
+                value={null}
+                onChange={(event, newValue) => {
+                  // setValue(newValue);
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Comunas"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={[]}
+                // getOptionLabel={option => option.title}
+                value={null}
+                onChange={(event, newValue) => {
+                  // setValue(newValue);
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Areas"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={[]}
+                // getOptionLabel={option => option.title}
+                value={null}
+                onChange={(event, newValue) => {
+                  // setValue(newValue);
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Profesiones"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            
             {/* <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
