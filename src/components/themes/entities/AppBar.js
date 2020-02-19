@@ -77,8 +77,7 @@ export default function SearchAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            USUARIO ENTIDAD
-          </Typography>
+            USERS ENTITIES
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
