@@ -6,7 +6,8 @@ const styles =  (theme) => {
           marginLeft: theme.spacing(2),
           marginRight: theme.spacing(2),
           [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: '85%',
+            width: '100%',
+            float: 'left',
             marginLeft: "auto",
             marginRight: "auto"
           }
