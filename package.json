@@ -1,6 +1,10 @@
 {
-  "name": "frontend-base",
+  "name": "frontend-sistema-profesionales",
+  "description": "Sistema de profesionales para revisar disponibilidad de profesionales por area",
   "version": "0.1.0",
+  "engines": {
+    "node": "12.13.0"
+  },
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
