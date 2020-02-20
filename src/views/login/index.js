@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -50,20 +50,28 @@ const useStyles = makeStyles(theme => ({
 
 
 
-function frontSignUp () {
-  const container = document.getElementById('container');
-	container.classList.add("right-panel-active");
-}
 
-function frontSignIn () {
-  const container = document.getElementById('container');
-	container.classList.remove("right-panel-active");
-}
+
 
 
 
 export default function SignUp() {
+
+
   const classes = useStyles();
+
+  const container = useRef(null);
+
+
+  const frontSignUp = () => {
+  	container.current.classList.add("right-panel-active");
+  }
+
+
+  const frontSignIn = () => {
+    container.current.classList.remove("right-panel-active")
+  }
+
 
   const data = {
     "login": "camilo",
@@ -98,7 +106,7 @@ export default function SignUp() {
 
       
     <Container component="main" maxWidth="xl">
-      <div className="container" id="container">
+      <div className="container" ref={container} >
         <div className="form-container sign-up-container">
                    
           <form action="#" style={{boder:'3px solid red'}}>
