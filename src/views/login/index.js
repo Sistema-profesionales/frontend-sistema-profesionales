@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,7 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import './login.css';
 // function Copyright() {
 //   return (
 //     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,6 +47,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+
+
+function frontSignUp () {
+  const container = document.getElementById('container');
+	container.classList.add("right-panel-active");
+}
+
+function frontSignIn () {
+  const container = document.getElementById('container');
+	container.classList.remove("right-panel-active");
+}
+
+
+
 export default function SignUp() {
   const classes = useStyles();
 
@@ -70,18 +85,28 @@ export default function SignUp() {
   if(isValid && isValid !== undefined) window.location.href = "/user/entity";
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-            Inicia sesion
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+    <div className="cont-body">
+    <div className="cont-login">
+      
+    <Container component="main" maxWidth="xl">
+      <div className="container" id="container">
+        <div className="form-container sign-up-container">
+                   
+          <form action="#" style={{boder:'3px solid red'}}>
+            <h1>Perfil profesional</h1>           
+              <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
+            <button>Registrar</button>
+            <p onClick={frontSignIn}>Ya tienes una cuenta? - Entrar</p>
+          </form>
+
+          
+        </div>
+        <div className="form-container sign-in-container">
+          <form action="#">
+            <h1>Ingrese</h1>
+            <span>sus datos para entrar al sistema</span>
+            <br></br>
+            <Grid style={{ width:'100%' }}>
               <TextField
                 variant="outlined"
                 required
@@ -92,7 +117,8 @@ export default function SignUp() {
                 autoComplete="email"
               />
             </Grid>
-            <Grid item xs={12}>
+            <br></br>
+            <Grid style={{ width:'100%' }}>
               <TextField
                 variant="outlined"
                 required
@@ -104,35 +130,29 @@ export default function SignUp() {
                 autoComplete="current-password"
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="Recordar contraseña"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleLogin}
-          >
-            Ingresaraaaaaaaaaaaaaaaaa
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link to="/register" variant="body2">
-                No tienes una cuenta?, Registrate.
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+            <a href="#">Recuperar passss</a>
+            <button>Continuar</button>
+          </form>
+        </div>
+        
+        <div className="overlay-container">
+            <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <h1>Cuenta empresa</h1>
+              <p>Encuentre a profesionales con disponibilidad inmediata.</p>
+              <button className="ghost" id="signIn">Registrar</button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <h1>¿Nuevo por acá?</h1>
+              <p>Registre su perfil y aumente sus ingresos.</p>
+              <button className="ghost" id="signUp" 
+              onClick={frontSignUp}
+              >Registrar</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <Box mt={5}>
-        {/* <Copyright /> */}
-      </Box>
     </Container>
+    </div></div>
   );
 }

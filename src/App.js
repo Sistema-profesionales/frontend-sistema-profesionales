@@ -26,7 +26,7 @@ function App() {
     }
   } else {
     return (
-      <DefaultTheme>
+      <DefaultTheme style={{ background: "red" }}>
         <Routes></Routes>
       </DefaultTheme>
     );
