@@ -23,7 +23,7 @@ export default function ComplexGrid() {
 
   const [professions, setProfessions] = React.useState([]);
 
-  const { valuesForm, setValuesForm, redirect, setRedirect } = useContext(AppContextSearchProfessional);
+  const { setValuesForm, redirect, setRedirect } = useContext(AppContextSearchProfessional);
 
   useEffect(() => {
     async function loadProfessions() {

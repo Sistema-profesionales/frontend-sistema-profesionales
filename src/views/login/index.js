@@ -95,7 +95,7 @@ export default function SignUp() {
           <form action="#" style={{boder:'3px solid red'}}>
             <h1>Perfil profesional</h1>           
               <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
-            <button>Registrar</button>
+            <Link to="/register"><button>Registrar</button></Link>
             <p onClick={frontSignIn}>Ya tienes una cuenta? - Entrar</p>
           </form>
 
