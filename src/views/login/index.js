@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
 import './login.css';
 // function Copyright() {
 //   return (
@@ -85,8 +86,16 @@ export default function SignUp() {
   if(isValid && isValid !== undefined) window.location.href = "/user/entity";
 
   return (
+    
     <div className="cont-body">
     <div className="cont-login">
+
+
+    <img className="fondo-capas" id="capa-uno" src={"img/background-login/capa-uno.png"}/>
+    <img className="fondo-capas" id="capa-dos" src={"img/background-login/capa-dos.png"}/>
+    <img className="fondo-capas" id="capa-tres" src={"img/background-login/capa-tres.png"}/>
+    <img className="fondo-capas" id="capa-cuatro" src={"img/background-login/capa-cuatro.png"}/>
+
       
     <Container component="main" maxWidth="xl">
       <div className="container" id="container">

@@ -15,6 +15,63 @@
     margin-top: 5vh;
 }
 
+.fondo-capas{
+	position:fixed; top:0;
+
+	width:91vw;
+	height:auto;
+	padding-left:9vw;
+	opacity:.2;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: linear;
+	filter: grayscale(20%);
+	max-width:1024px;
+	left:20%;
+}
+
+#capa-uno{
+	animation-duration: 100s;
+	animation-name: moverCapaUno;
+}
+#capa-dos{
+	animation-duration: 80s;
+	animation-name: moverCapaDos;
+
+	width:80vw;
+	left:25%;
+	opacity:.9;
+}
+#capa-tres{
+	animation-duration: 1000s;
+	animation-name: moverCapaTres;
+	opacity:.4;
+}
+#capa-cuatro{
+	animation-duration: 5s;
+	animation-name: moverCapaCuatro;
+}
+
+@keyframes moverCapaUno {
+	0% { transform:rotate(1440deg); }
+	100% { transform:rotate(0deg); }
+}
+
+@keyframes moverCapaDos {
+	0% { transform:rotate(0deg); }
+	100% { transform:rotate(1440deg); }
+}
+
+@keyframes moverCapaTres {
+	0% { transform:rotate(-1440deg); }
+	100% { transform:rotate(0deg); }
+}
+
+@keyframes moverCapaCuatro {
+	0% { transform:rotate(-5deg); }
+	100% { transform:rotate(0deg); }
+}
+
 h1 {
 	font-weight: bold;
 	margin: 0;
