@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,6 +17,8 @@ import { getAreas, getProfessionsByArea } from '../../factory/areas';
 import Chip from '@material-ui/core/Chip';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import './register.css';
+
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -63,10 +65,21 @@ export default function SignUp() {
     area: null,
     profession: null
   });
+  const [chips, setChips] = useState([]);
+  const chipsSelected = useRef(null);
 
   const [sendObject, setSendObject] = useState({
 
   });
+
+
+  const eventual = (e) => event => {
+    let filtersChips = chips.filter(x => x.id !== e.id);
+    console.log(filtersChips)
+    setChips(filtersChips);
+    
+  }
+
 
   useEffect(() => {
     async function areas() {
@@ -86,7 +99,8 @@ export default function SignUp() {
 
   }, []);
 
-  console.log({ values, professions });
+  // console.log({ values, professions });
+  console.log(chips)
 
   const getProffesionsArea = async (areaId) => {
     try {
@@ -246,7 +260,7 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Autocomplete
+              {/* <Autocomplete
                 multiple
                 id="fixed-tags-demo"
                 options={professions}
@@ -261,7 +275,7 @@ export default function SignUp() {
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
+                        style={{ marginRight: 8, border: '5px solid red' }}
                         checked={selected}
                       />
                       {option.title}
@@ -278,15 +292,45 @@ export default function SignUp() {
                     fullWidth
                   />
                 )}
+              /> */}
+
+
+              <Autocomplete
+                id="fixed-tags-demo"
+                options={professions}
+                getOptionLabel={option => option.title}
+                value={values.profession}
+                onChange={(event, newValue) => {
+                  setValues({ ...values, profession: newValue })
+                  setChips([...chips, newValue]);
+                  chipsSelected.current.focus();
+                }}
+                style={{ width: '100%' }}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Profesiones"
+                    variant="outlined"
+                    placeholder="Buscar"
+                    fullWidth
+                  />
+                )}
               />
+
+
             </Grid>
 
-            {/* <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid> */}
+
+            <Grid item xs={12}>
+
+              {chips.length > 0 && chips.map((e, i) => e && (
+                <div key={i} className="chipp">
+                  <div className="text-chipp">{e.name}</div>
+                  <div className="remove-chipp" onClick={eventual(e)}>x</div>
+                </div>
+              ))}
+
+            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -294,6 +338,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            ref={chipsSelected}
           >
             Registrarse
           </Button>

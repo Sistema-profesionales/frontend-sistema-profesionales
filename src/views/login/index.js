@@ -57,21 +57,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
 
-
   const classes = useStyles();
-
   const container = useRef(null);
-
 
   const frontSignUp = () => {
   	container.current.classList.add("right-panel-active");
   }
 
-
   const frontSignIn = () => {
     container.current.classList.remove("right-panel-active")
   }
-
 
   const data = {
     "login": "camilo",
