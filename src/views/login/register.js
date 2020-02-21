@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -14,27 +12,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAreas, getProfessionsByArea } from '../../factory/areas';
-import Chip from '@material-ui/core/Chip';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import { getRegions, getProvinciesByRegion } from '../../factory/regions';
+import { getCommunesByProvince } from '../../factory/provincies';
 import './register.css';
-
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://material-ui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -61,25 +41,41 @@ export default function SignUp() {
 
   const [areas, setAreas] = useState([]);
   const [professions, setProfessions] = useState([]);
+  const [regions, setRegions] = useState([]);
+  const [provincies, setProvincies] = useState([]);
+  const [communes, setCommunes] = useState([]);
   const [values, setValues] = useState({
     area: null,
-    profession: null
+    profession: null,
+    region: null,
+    provincie: null,
+    commune: null
   });
   const [chips, setChips] = useState([]);
   const chipsSelected = useRef(null);
 
   const [sendObject, setSendObject] = useState({
-
+    rut: null,
+    names: null,
+    lastnames: null,
+    communeId: null,
+    login: null,
+    password: null,
+    phone: null,
+    email: null,
+    professions: []
   });
 
-
-  const eventual = (e) => event => {
+  const createChipsProfessions = (e) => event => {
     let filtersChips = chips.filter(x => x.id !== e.id);
-    console.log(filtersChips)
     setChips(filtersChips);
-    
+    setSendObject({ ...sendObject, professions: filtersChips });
   }
 
+  const handleChangeInputText = (event) => {
+    const { name, value } = event.target;
+    setSendObject({ ...sendObject, [name]: value });
+  }
 
   useEffect(() => {
     async function areas() {
@@ -99,8 +95,24 @@ export default function SignUp() {
 
   }, []);
 
-  // console.log({ values, professions });
-  console.log(chips)
+
+  useEffect(() => {
+    async function regions() {
+      try {
+        let regions = await getRegions();
+
+        for (let i = 0; i < regions.length; i++) {
+          regions[i]["title"] = regions[i].name;
+        }
+
+        setRegions(regions);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    regions();
+
+  }, []);
 
   const getProffesionsArea = async (areaId) => {
     try {
@@ -115,6 +127,40 @@ export default function SignUp() {
     }
   }
 
+  const getProvincesRegion = async (regionId) => {
+    try {
+      let provincies = await getProvinciesByRegion(regionId);
+      for (let i = 0; i < provincies.length; i++) {
+        provincies[i]["title"] = provincies[i].name;
+      }
+
+      setProvincies(provincies);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  const getCommunesProvince = async (provinceId) => {
+    try {
+      let communes = await getCommunesByProvince(provinceId);
+      for (let i = 0; i < communes.length; i++) {
+        communes[i]["title"] = communes[i].name;
+      }
+
+      setCommunes(communes);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const saveUser = () => {
+    // first save user
+
+    // second save information professions
+    console.table(sendObject);
+  }
+
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -127,16 +173,41 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} style={{ paddingTop: '30px' }} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="rut"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="Nombres"
+                id="rut"
+                label="RUT"
                 autoFocus
+                onChange={handleChangeInputText}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                autoComplete="fname"
+                name="names"
+                variant="outlined"
+                required
+                fullWidth
+                id="names"
+                label="Nombres"
+                onChange={handleChangeInputText}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastNames"
+                label="Apellidos"
+                name="lastnames"
+                autoComplete="lname"
+                onChange={handleChangeInputText}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -144,13 +215,14 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Apellidos"
-                name="lastName"
-                autoComplete="lname"
+                id="phone"
+                label="Telefono"
+                name="phone"
+                autoComplete="phone"
+                onChange={handleChangeInputText}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -159,9 +231,22 @@ export default function SignUp() {
                 label="Correo electronico"
                 name="email"
                 autoComplete="email"
+                onChange={handleChangeInputText}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="login"
+                label="Login"
+                type="text"
+                id="login"
+                onChange={handleChangeInputText}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -171,22 +256,25 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handleChangeInputText}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 id="fixed-tags-demo"
-                options={[]}
-                // getOptionLabel={option => option.title}
-                value={null}
+                options={regions}
+                getOptionLabel={option => option.title}
+                value={values.region}
                 onChange={(event, newValue) => {
-                  // setValue(newValue);
+                  setValues({ ...values, region: newValue });
+                  if (newValue) getProvincesRegion(newValue.id);
+                  else setProvincies([]);
                 }}
                 style={{ width: '100%' }}
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label="Regiones"
+                    label="Región"
                     variant="outlined"
                     placeholder="Buscar"
                     fullWidth
@@ -197,17 +285,18 @@ export default function SignUp() {
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 id="fixed-tags-demo"
-                options={[]}
-                // getOptionLabel={option => option.title}
-                value={null}
+                options={provincies}
+                getOptionLabel={option => option.title}
+                value={values.provincie}
                 onChange={(event, newValue) => {
-                  // setValue(newValue);
+                  setValues({ ...values, provincie: newValue });
+                  if (newValue) getCommunesProvince(newValue.id);
                 }}
                 style={{ width: '100%' }}
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label="Provincias"
+                    label="Provincia"
                     variant="outlined"
                     placeholder="Buscar"
                     fullWidth
@@ -218,17 +307,18 @@ export default function SignUp() {
             <Grid item xs={12}>
               <Autocomplete
                 id="fixed-tags-demo"
-                options={[]}
-                // getOptionLabel={option => option.title}
-                value={null}
+                options={communes}
+                getOptionLabel={option => option.title}
+                value={values.commune}
                 onChange={(event, newValue) => {
-                  // setValue(newValue);
+                  setValues({ ...values, commune: newValue });
+                  if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
                 }}
                 style={{ width: '100%' }}
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label="Comunas"
+                    label="Comuna"
                     variant="outlined"
                     placeholder="Buscar"
                     fullWidth
@@ -260,41 +350,6 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              {/* <Autocomplete
-                multiple
-                id="fixed-tags-demo"
-                options={professions}
-                disableCloseOnSelect
-                getOptionLabel={option => option.title}
-                renderOption={(option, { selected }) => {
-                  if(selected) {
-                    console.log(option);
-                  }
-                  return (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8, border: '5px solid red' }}
-                        checked={selected}
-                      />
-                      {option.title}
-                    </React.Fragment>
-                  )
-                }}
-                style={{ width: '100%' }}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Profesiones"
-                    variant="outlined"
-                    placeholder="Buscar"
-                    fullWidth
-                  />
-                )}
-              /> */}
-
-
               <Autocomplete
                 id="fixed-tags-demo"
                 options={professions}
@@ -303,6 +358,7 @@ export default function SignUp() {
                 onChange={(event, newValue) => {
                   setValues({ ...values, profession: newValue })
                   setChips([...chips, newValue]);
+                  setSendObject({ ...sendObject, professions: [...sendObject.professions, newValue] });
                   chipsSelected.current.focus();
                 }}
                 style={{ width: '100%' }}
@@ -316,29 +372,26 @@ export default function SignUp() {
                   />
                 )}
               />
-
-
             </Grid>
 
-
             <Grid item xs={12}>
-
               {chips.length > 0 && chips.map((e, i) => e && (
                 <div key={i} className="chipp">
                   <div className="text-chipp">{e.name}</div>
-                  <div className="remove-chipp" onClick={eventual(e)}>x</div>
+                  <div className="remove-chipp" onClick={createChipsProfessions(e)}>x</div>
                 </div>
               ))}
 
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             ref={chipsSelected}
+            onClick={saveUser}
           >
             Registrarse
           </Button>
