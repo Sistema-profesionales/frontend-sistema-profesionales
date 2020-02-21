@@ -8,7 +8,7 @@ import ProfessionalTheme from "./components/themes/professionals/professionalsTh
 
 function App() {
   // console.log(window.location);
-  if (window.location.pathname != "/" && window.location.pathname != "/register") {
+  if (window.location.pathname !== "/" && window.location.pathname !== "/register") {
     if (window.location.pathname.includes("/user/entity")) {
       return (
         <EntityTheme>
