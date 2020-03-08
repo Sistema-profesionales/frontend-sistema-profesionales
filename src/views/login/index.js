@@ -5,43 +5,16 @@ import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 // import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import { loginUser } from '../../factory/users';
 import './login.css';
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://material-ui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
-// const useStyles = makeStyles(theme => ({
-//   paper: {
-//     // marginTop: theme.spacing(8),
-//     display: 'flex',
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//   },
-//   avatar: {
-//     margin: theme.spacing(1),
-//     backgroundColor: theme.palette.secondary.main,
-//   },
-//   form: {
-//     width: '100%', // Fix IE 11 issue.
-//     marginTop: theme.spacing(3),
-//   },
-//   submit: {
-//     margin: theme.spacing(3, 0, 2),
-//   },
-// }));
 
 export default function SignUp() {
   const container = useRef(null);
+  const [isProfessional, setIsProfessional] = useState(undefined); 
+  const [userAccess, setUserAccess] = React.useState({
+    login: null,
+    password: null
+  });
 
   const frontSignUp = () => {
   	container.current.classList.add("right-panel-active");
@@ -71,25 +44,28 @@ export default function SignUp() {
     });
   }
 
-  const data = {
-    "login": "camilo",
-    "pass": "1234",
-    "entityId": 1
+  const handleForm = (event) => {
+    const { name, value } = event.target;
+
+    setUserAccess({ ...userAccess, [name]: value });
   }
 
-  const [isValid, setIsvalid] = useState(undefined); 
-
-  const handleLogin = () => { 
-    if(data.entityId) {
-      setIsvalid(true);
-      console.log(data);
-    } else {
-      setIsvalid(false);
+  const handleLogin = async () => { 
+    try {
+      let queryUser = await loginUser(userAccess);
+      if(queryUser.entityId) {
+        setIsProfessional(false);
+      } else {
+        console.log("PROFESIONAL");
+      }
+    } catch (error) {
+      console.log(error);
     }
+    
    }
 
-  if(!isValid && isValid !== undefined)  window.location.href = "/user/professional";
-  if(isValid && isValid !== undefined) window.location.href = "/user/entity";
+  if(isProfessional && isProfessional !== undefined)  window.location.href = "/user/professional";
+  if(!isProfessional && isProfessional !== undefined) window.location.href = "/user/entity";
 
   return (
     <div>
@@ -111,7 +87,7 @@ export default function SignUp() {
 
                     <h1>Perfil profesional</h1>           
                     <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
-                    <Link to="/register"><button>Registrar</button></Link>
+                    <Link to="/register/professional"><button>Registrar</button></Link>
 
                     <div onClick={movToLeft} className="only-mov"> Empresa?</div>
                     <p onClick={frontSignIn} className="goLogin">← Ya tengo cuenta.</p>
@@ -131,8 +107,9 @@ export default function SignUp() {
                       fullWidth
                       id="email"
                       label="Usuario o correo electronico"
-                      name="email"
+                      name="login"
                       autoComplete="email"
+                      onChange={handleForm}
                     />
                   </Grid>
                   <br></br>
@@ -146,10 +123,11 @@ export default function SignUp() {
                       type="password"
                       id="password"
                       autoComplete="current-password"
+                      onChange={handleForm}
                     />
                   </Grid>
                   <a href="#">Recuperar passss</a>
-                  <button onClick={handleLogin}>Continuar</button>
+                  <button type="button" onClick={handleLogin}>Continuar</button>
 
                   <p onClick={movToRight} className="only-mov" >No tengo cuenta → </p>
                 </form>
@@ -162,7 +140,7 @@ export default function SignUp() {
 
                     <h1>Cuenta empresa</h1>
                     <p>Encuentre a profesionales con disponibilidad inmediata.</p>
-                    <button className="ghost" id="signIn">Registrar</button>
+                    <Link to="/register/entity"><button className="ghost" id="signIn">Registrar</button></Link>
 
 
                     <p onClick={movToRight} className="only-mov">Profesional?</p>

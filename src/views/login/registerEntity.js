@@ -14,6 +14,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAreas, getProfessionsByArea } from '../../factory/areas';
 import { getRegions, getProvinciesByRegion } from '../../factory/regions';
 import { getCommunesByProvince } from '../../factory/provincies';
+import { createUserProfessional } from '../../factory/users';
 import './register.css';
 
 const useStyles = makeStyles(theme => ({
@@ -58,7 +59,7 @@ export default function SignUp() {
     rut: null,
     names: null,
     lastnames: null,
-    communeId: null,
+    commune_id: null,
     login: null,
     password: null,
     phone: null,
@@ -154,11 +155,18 @@ export default function SignUp() {
     }
   }
 
-  const saveUser = () => {
+  const saveUser = async () => {
     // first save user
 
+    try {
+      let newUserProfessional = await createUserProfessional(sendObject);
+      console.log(newUserProfessional);
+    } catch (error) {
+      console.log(error);
+    }
+
     // second save information professions
-    console.table(sendObject);
+    // console.log(sendObject.professions);
   }
 
   return (
@@ -169,7 +177,7 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Crear nueva cuenta
+          Crear cuenta Empresa
         </Typography>
         <form className={classes.form} style={{ paddingTop: '30px' }} noValidate>
           <Grid container spacing={2}>
@@ -314,6 +322,7 @@ export default function SignUp() {
                   setValues({ ...values, commune: newValue });
                   if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
                 }}
+                noOptionsText={false}
                 style={{ width: '100%' }}
                 renderInput={params => (
                   <TextField
@@ -348,40 +357,6 @@ export default function SignUp() {
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Autocomplete
-                id="fixed-tags-demo"
-                options={professions}
-                getOptionLabel={option => option.title}
-                value={values.profession}
-                onChange={(event, newValue) => {
-                  setValues({ ...values, profession: newValue })
-                  setChips([...chips, newValue]);
-                  setSendObject({ ...sendObject, professions: [...sendObject.professions, newValue] });
-                  chipsSelected.current.focus();
-                }}
-                style={{ width: '100%' }}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Profesiones"
-                    variant="outlined"
-                    placeholder="Buscar"
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              {chips.length > 0 && chips.map((e, i) => e && (
-                <div key={i} className="chipp">
-                  <div className="text-chipp">{e.name}</div>
-                  <div className="remove-chipp" onClick={createChipsProfessions(e)}>x</div>
-                </div>
-              ))}
-
             </Grid>
           </Grid>
           <Button
