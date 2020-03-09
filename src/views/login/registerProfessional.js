@@ -60,7 +60,7 @@ export default function SignUp() {
     rut: null,
     names: null,
     lastnames: null,
-    communeId: null,
+    commune_id: null,
     login: null,
     password: null,
     phone: null,
@@ -162,7 +162,18 @@ export default function SignUp() {
   const saveUser = async () => {
     try {
       let newUserProfessional = await createUserProfessional(sendObject);
-      console.log(newUserProfessional);
+      //console.log(newUserProfessional);
+      if(newUserProfessional) {
+        setAlert({
+          variant: 'filled',
+          severity: 'success',
+          message: "Te has registrado con exito. Puedes iniciar sesion"
+        });
+
+        setTimeout(() => {
+          window.location.href= "/";
+        }, 3000);
+      }
     } catch (error) {
       console.log(error.message);
       setAlert({
@@ -330,7 +341,7 @@ export default function SignUp() {
                   value={values.commune}
                   onChange={(event, newValue) => {
                     setValues({ ...values, commune: newValue });
-                    if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
+                    if (newValue) setSendObject({ ...sendObject, commune_id: newValue.id });
                   }}
                   noOptionsText={false}
                   style={{ width: '100%' }}
