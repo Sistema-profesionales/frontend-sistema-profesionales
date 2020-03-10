@@ -70,10 +70,10 @@ export default function SignUp() {
   return (
     <div>
 
-      <img className="fondo-capas" id="capa-uno" src={"img/background-login/capa-uno.png"}/>
-      <img className="fondo-capas" id="capa-dos" src={"img/background-login/capa-dos.png"}/>
-      <img className="fondo-capas" id="capa-tres" src={"img/background-login/capa-tres.png"}/>
-      <img className="fondo-capas" id="capa-cuatro" src={"img/background-login/capa-cuatro.png"}/>
+      <img className="fondo-capas" id="capa-uno" src={"img/background-login/capa-uno.png"} alt="capa uno" />
+      <img className="fondo-capas" id="capa-dos" src={"img/background-login/capa-dos.png"} alt="capa dos" />
+      <img className="fondo-capas" id="capa-tres" src={"img/background-login/capa-tres.png"} alt="capa tres" />
+      <img className="fondo-capas" id="capa-cuatro" src={"img/background-login/capa-cuatro.png"} alt="capa cuatro" />
 
 
       <div className="cont-body">

@@ -24,9 +24,9 @@ export default function TransitionAlerts(props) {
     <div className={classes.root}>
       <Collapse in={alert ? true : false}>
         <Alert
-          variant={variant ? variant : ''}
+          variant={variant ? variant : 'standard'}
           style={{ display: 'inline-table !important' }}
-          severity={severity ? severity : ''}
+          severity={severity ? severity : 'info'}
           action={
             <IconButton
             style={{ fontSize: '35px !important' }}
