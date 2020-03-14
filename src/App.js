@@ -7,9 +7,10 @@ import EntityTheme from "./components/themes/entities/entitiesTheme";
 import ProfessionalTheme from "./components/themes/professionals/professionalsTheme";
 
 function App() {
-  // console.log(window.location);
+  console.log(window.location.pathname);
   if (window.location.pathname !== "/" && window.location.pathname !== "/register/professional" && window.location.pathname !== "/register/entity") {
     if (window.location.pathname.includes("/user/entity")) {
+      console.log("entity");
       return (
         <EntityTheme>
           <RoutesEntity></RoutesEntity>

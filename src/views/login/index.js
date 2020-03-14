@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
@@ -10,7 +10,6 @@ import './login.css';
 
 export default function SignUp() {
   const container = useRef(null);
-  const [isProfessional, setIsProfessional] = useState(undefined); 
   const [userAccess, setUserAccess] = React.useState({
     login: null,
     password: null
@@ -54,9 +53,9 @@ export default function SignUp() {
     try {
       let queryUser = await loginUser(userAccess);
       if(queryUser.entityId) {
-        setIsProfessional(false);
+        window.location.href = "/user/entity";
       } else {
-        console.log("PROFESIONAL");
+        window.location.href = "/user/professional";
       }
     } catch (error) {
       console.log(error);
@@ -64,8 +63,8 @@ export default function SignUp() {
     
    }
 
-  if(isProfessional && isProfessional !== undefined)  window.location.href = "/user/professional";
-  if(!isProfessional && isProfessional !== undefined) window.location.href = "/user/entity";
+  // if(isProfessional && isProfessional !== undefined)  window.location.href = "/user/professional";
+  // if(!isProfessional && isProfessional !== undefined) window.location.href = "/user/entity";
 
   return (
     <div>

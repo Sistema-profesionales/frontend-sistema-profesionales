@@ -18,6 +18,7 @@ import { createUserProfessional } from '../../factory/users';
 import './register.css';
 import Alert from '../../components/globals/Alert';
 import { AppContextRegisterProfessional } from '../../context/AppContextRegisterProfessional';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+  let history = useHistory();
   const classes = useStyles();
   const [areas, setAreas] = useState([]);
   const [professions, setProfessions] = useState([]);
@@ -60,7 +62,7 @@ export default function SignUp() {
     rut: null,
     names: null,
     lastnames: null,
-    commune_id: null,
+    communeId: null,
     login: null,
     password: null,
     phone: null,
@@ -69,7 +71,6 @@ export default function SignUp() {
   });
 
   const [alert, setAlert] = useState(undefined);
-  // const [openAlert, setOpenAlert] = useState(false); 
 
   const createChipsProfessions = (e) => event => {
     let filtersChips = chips.filter(x => x.id !== e.id);
@@ -167,11 +168,12 @@ export default function SignUp() {
         setAlert({
           variant: 'filled',
           severity: 'success',
-          message: "Te has registrado con exito. Puedes iniciar sesion"
+          message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
+          loading: true
         });
 
         setTimeout(() => {
-          window.location.href= "/";
+          history.push("/");
         }, 3000);
       }
     } catch (error) {
@@ -181,7 +183,6 @@ export default function SignUp() {
         severity: 'error',
         message: error.message
       });
-      // console.log(error);
     }
   }
 
@@ -341,7 +342,7 @@ export default function SignUp() {
                   value={values.commune}
                   onChange={(event, newValue) => {
                     setValues({ ...values, commune: newValue });
-                    if (newValue) setSendObject({ ...sendObject, commune_id: newValue.id });
+                    if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
                   }}
                   noOptionsText={false}
                   style={{ width: '100%' }}

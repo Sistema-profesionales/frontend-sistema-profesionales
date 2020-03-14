@@ -4,6 +4,7 @@ import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
+import CircularProgress from './CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,7 @@ export default function TransitionAlerts(props) {
           variant={variant ? variant : 'standard'}
           style={{ display: 'inline-table !important' }}
           severity={severity ? severity : 'info'}
+          icon={alert && alert.loading !== undefined && alert.loading && severity === 'success' ? <CircularProgress /> : null}
           action={
             <IconButton
             style={{ fontSize: '35px !important' }}
@@ -45,8 +47,6 @@ export default function TransitionAlerts(props) {
             message && Array.isArray(message) ?
               <pre style={{ textAlign: 'justify', fontSize: 'small', margin: 0 }}>{message.join("\n")}</pre> : message
           }
-
-         
         </Alert>
       </Collapse>
     </div>
