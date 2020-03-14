@@ -6,7 +6,7 @@ import styles from "./defaultStyles.css";
 import { BrowserRouter } from "react-router-dom";
 const useStyles = makeStyles(theme => styles(theme));
 
-export default function SearchProfessionals(props) {
+export default function DefaultTheme(props) {
 const classes = useStyles();
   return (
     <BrowserRouter >

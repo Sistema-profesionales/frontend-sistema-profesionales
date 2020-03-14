@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import AppBar from "./AppBar";
 const useStyles = makeStyles(theme => styles(theme));
 
-export default function ProfessionalsThemeS(props) {
+export default function EntitiesTheme(props) {
   const classes = useStyles();
   return (
     <BrowserRouter>
@@ -15,8 +15,6 @@ export default function ProfessionalsThemeS(props) {
         <CssBaseline />
         <main className={classes.layout}>
           {props.children}
-          {/* <Routes></Routes> */}
-          {/* <CopyRight /> */}
         </main>
       </React.Fragment>
     </BrowserRouter>

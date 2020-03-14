@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FormSearch from '../../components/entities/formSearch';
+import FormSearch from '../../components/entities/FormSearch';
 import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 
 export default function SearchProfessionals() {

@@ -17,7 +17,7 @@ import { getCommunesByProvince } from '../../factory/provincies';
 import { createUserProfessional } from '../../factory/users';
 import './register.css';
 import Alert from '../../components/globals/Alert';
-import { AppContextRegisterProfessional } from '../../context/AppContextRegisterProfessional';
+import { AppContextRegister } from '../../context/AppContextRegister';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function RegisterProfessional() {
   let history = useHistory();
   const classes = useStyles();
   const [areas, setAreas] = useState([]);
@@ -187,7 +187,7 @@ export default function SignUp() {
   }
 
   return (
-    <AppContextRegisterProfessional.Provider value={{
+    <AppContextRegister.Provider value={{
       alert,
       setAlert
     }}>
@@ -198,10 +198,10 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Crear cuenta profesional
+            Regístrese como profesional
         </Typography>
           <form className={classes.form} style={{ paddingTop: '30px' }} noValidate>
-            <Alert {...alert} context={AppContextRegisterProfessional}></Alert>
+            <Alert {...alert} context={AppContextRegister}></Alert>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
@@ -439,6 +439,6 @@ export default function SignUp() {
           {/* <Copyright /> */}
         </Box>
       </Container>
-    </AppContextRegisterProfessional.Provider>
+    </AppContextRegister.Provider>
   );
 }

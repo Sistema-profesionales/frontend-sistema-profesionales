@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CustomizedProgressBars() {
+export default function CircularProgressBar() {
   const classes = useStyles();
 
   return (

@@ -13,11 +13,11 @@ import {
 import { getProfessions } from '../../factory/professions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
-import ListProfessionals from './listProfessionals';
+import ListProfessionals from './ListProfessionals';
 
 const useStyles = makeStyles(theme => styles(theme));
 
-export default function ComplexGrid() {
+export default function FormSearch() {
   const classes = useStyles();
   // const [redirect, setRedirect] = useState(false);
 

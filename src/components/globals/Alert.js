@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TransitionAlerts(props) {
+export default function AlertGlobal(props) {
   const classes = useStyles();
   const { severity, message, variant, context } = props;
   const { alert, setAlert } = useContext(context);

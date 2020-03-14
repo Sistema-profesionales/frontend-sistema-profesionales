@@ -2,9 +2,9 @@ import React from "react";
 import Routes from "../src/routes/routes";
 import RoutesEntity from "./routes/entities";
 import RoutesProfessionals from "./routes/professionals";
-import DefaultTheme from "./components/themes/default/defaultTheme";
-import EntityTheme from "./components/themes/entities/entitiesTheme";
-import ProfessionalTheme from "./components/themes/professionals/professionalsTheme";
+import DefaultTheme from "./components/themes/default/DefaultTheme";
+import EntityTheme from "./components/themes/entities/EntitiesTheme";
+import ProfessionalTheme from "./components/themes/professionals/ProfessionalsTheme";
 
 function App() {
   console.log(window.location.pathname);

@@ -8,7 +8,7 @@ import Container from '@material-ui/core/Container';
 import { loginUser } from '../../factory/users';
 import './login.css';
 
-export default function SignUp() {
+export default function Index() {
   const container = useRef(null);
   const [userAccess, setUserAccess] = React.useState({
     login: null,
