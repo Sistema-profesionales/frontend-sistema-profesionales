@@ -36,11 +36,11 @@ export default function Dashboard(props) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
-    <AppContextProfessionals.Provider value={{
-      open,
-      setOpen
-    }}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AppContextProfessionals.Provider value={{
+        open,
+        setOpen
+      }}>
         <div className={classes.root}>
           <CssBaseline />
 
@@ -67,7 +67,7 @@ export default function Dashboard(props) {
             </Container>
           </main>
         </div>
-      </BrowserRouter>
-    </AppContextProfessionals.Provider>
+      </AppContextProfessionals.Provider>
+    </BrowserRouter>
   );
 }

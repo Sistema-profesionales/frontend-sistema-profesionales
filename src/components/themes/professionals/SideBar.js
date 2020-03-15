@@ -56,6 +56,14 @@ export default function Sidebar() {
             <ListItemText primary="Mi calendario" />
           </ListItem>
         </Link>
+        <Link to="#" onClick={() => { sessionStorage.removeItem("userLogged"); window.location.href="/"; }} style={{ textDecoration: 'none', color: '#212121' }}>
+          <ListItem button>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Salir" />
+          </ListItem>
+        </Link>
         {/* <ListItem button>
           <ListItemIcon>
             <BarChartIcon />

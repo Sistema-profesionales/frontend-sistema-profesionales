@@ -11,7 +11,7 @@ const classes = useStyles();
   return (
     <BrowserRouter >
       <React.Fragment >
-        <Grid item sm={2} xs={4} style={{ padding: "15px" }}>
+        <Grid item sm={2} xs={4}>
           {/* <img src={"./img/logogray.png"} width="40"></img> */}
         </Grid>
         <CssBaseline />
@@ -21,6 +21,6 @@ const classes = useStyles();
           {/* <CopyRight /> */}
         </main>
       </React.Fragment>
-    </BrowserRouter>
+     </BrowserRouter>
   );
 }

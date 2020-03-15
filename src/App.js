@@ -7,10 +7,11 @@ import EntityTheme from "./components/themes/entities/EntitiesTheme";
 import ProfessionalTheme from "./components/themes/professionals/ProfessionalsTheme";
 
 function App() {
-  console.log(window.location.pathname);
-  if (window.location.pathname !== "/" && window.location.pathname !== "/register/professional" && window.location.pathname !== "/register/entity") {
-    if (window.location.pathname.includes("/user/entity")) {
-      console.log("entity");
+  let userLogged = JSON.parse(sessionStorage.getItem("userLogged"));
+  console.log(userLogged);
+
+  if (userLogged) {
+    if (userLogged.entityId) {
       return (
         <EntityTheme>
           <RoutesEntity></RoutesEntity>
@@ -18,7 +19,7 @@ function App() {
       );
     }
 
-    if (window.location.pathname.includes("/user/professional")) {
+    if (!userLogged.entityId) {
       return (
         <ProfessionalTheme>
           <RoutesProfessionals></RoutesProfessionals>

@@ -1,15 +1,14 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-// import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { loginUser } from '../../factory/users';
 import './login.css';
 
 export default function Index() {
   const container = useRef(null);
+  const [redirect, setRedirect] = React.useState(undefined);
   const [userAccess, setUserAccess] = React.useState({
     login: null,
     password: null
@@ -52,10 +51,18 @@ export default function Index() {
   const handleLogin = async () => { 
     try {
       let queryUser = await loginUser(userAccess);
+      if(queryUser) {
+        sessionStorage.setItem("userLogged", JSON.stringify(queryUser));
+        
+      }
       if(queryUser.entityId) {
-        window.location.href = "/user/entity";
+        setRedirect({
+          path: "/user/entity"
+        });
       } else {
-        window.location.href = "/user/professional";
+        setRedirect({
+          path: "/user/professional"
+        });
       }
     } catch (error) {
       console.log(error);
@@ -63,8 +70,9 @@ export default function Index() {
     
    }
 
-  // if(isProfessional && isProfessional !== undefined)  window.location.href = "/user/professional";
-  // if(!isProfessional && isProfessional !== undefined) window.location.href = "/user/entity";
+   if(redirect) {
+    return (<Redirect from='/' to={redirect.path} />);
+   }
 
   return (
     <div>
@@ -82,7 +90,7 @@ export default function Index() {
             <div className="container" ref={container} >
               <div className="form-container sign-up-container">
                         
-                <form action="#" style={{boder:'3px solid red'}}>
+                <form style={{boder:'3px solid red'}}>
 
                     <h1>Perfil profesional</h1>           
                     <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
@@ -125,7 +133,7 @@ export default function Index() {
                       onChange={handleForm}
                     />
                   </Grid>
-                  <a href="#">Recuperar passss</a>
+                  <Link to="#">Recuperar passss</Link>
                   <button type="button" onClick={handleLogin}>Continuar</button>
 
                   <p onClick={movToRight} className="only-mov" >No tengo cuenta → </p>
