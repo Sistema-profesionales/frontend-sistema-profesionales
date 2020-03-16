@@ -3,7 +3,8 @@
   "description": "Sistema de profesionales para revisar disponibilidad de profesionales por area",
   "version": "0.1.0",
   "engines": {
-    "node": "12.13.0"
+    "node": "12.13.0",
+    "npm": "6.13.4"
   },
   "private": true,
   "dependencies": {
