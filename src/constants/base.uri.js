@@ -1,0 +1,1 @@
+export const BASE_URI_REST_API = process.env.REACT_APP_BASE_URI_REST;
