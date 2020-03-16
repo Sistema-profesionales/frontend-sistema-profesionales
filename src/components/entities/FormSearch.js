@@ -18,7 +18,7 @@ import ListProfessionals from './ListProfessionals';
 const useStyles = makeStyles(theme => styles(theme));
 
 
-// EXPORTAR FORMSEARCH
+// EXPORT FORMSEARCH
 export default function FormSearch() {
   const classes = useStyles();
   // const [redirect, setRedirect] = useState(false);
