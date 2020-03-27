@@ -15,7 +15,7 @@ export default function Index() {
   });
 
   const frontSignUp = () => {
-  	container.current.classList.add("right-panel-active");
+    container.current.classList.add("right-panel-active");
   }
 
   const frontSignIn = () => {
@@ -48,14 +48,14 @@ export default function Index() {
     setUserAccess({ ...userAccess, [name]: value });
   }
 
-  const handleLogin = async () => { 
+  const handleLogin = async () => {
     try {
       let queryUser = await loginUser(userAccess);
-      if(queryUser) {
+      if (queryUser) {
         sessionStorage.setItem("userLogged", JSON.stringify(queryUser));
-        
+
       }
-      if(queryUser.entityId) {
+      if (queryUser.entityId) {
         setRedirect({
           path: "/user/entity"
         });
@@ -67,12 +67,12 @@ export default function Index() {
     } catch (error) {
       console.log(error);
     }
-    
-   }
 
-   if(redirect) {
+  }
+
+  if (redirect) {
     return (<Redirect from='/' to={redirect.path} />);
-   }
+  }
 
   return (
     <div>
@@ -89,25 +89,25 @@ export default function Index() {
           <Container component="main" maxWidth="xl">
             <div className="container" ref={container} >
               <div className="form-container sign-up-container">
-                        
-                <form style={{boder:'3px solid red'}}>
 
-                    <h1>Perfil profesional</h1>           
-                    <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
-                    <Link to="/register/professional"><button>Registrar</button></Link>
+                <form style={{ boder: '3px solid red' }}>
 
-                    <div onClick={movToLeft} className="only-mov"> Empresa?</div>
-                    <p onClick={frontSignIn} className="goLogin">← Ya tengo cuenta.</p>
-        
+                  <h1>Perfil profesional</h1>
+                  <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
+                  <Link to="/register/professional"><button>Registrar</button></Link>
+
+                  <div onClick={movToLeft} className="only-mov"> Empresa?</div>
+                  <p onClick={frontSignIn} className="goLogin">← Ya tengo cuenta.</p>
+
                 </form>
-                
+
               </div>
               <div className="form-container sign-in-container">
-                <form action="#"><br></br>
+                <form><br></br>
                   <h1>Ingrese</h1>
                   <span>sus datos para entrar al sistema</span>
                   <br></br>
-                  <Grid style={{ width:'100%' }}>
+                  <Grid style={{ width: '100%' }}>
                     <TextField
                       variant="outlined"
                       required
@@ -120,7 +120,7 @@ export default function Index() {
                     />
                   </Grid>
                   <br></br>
-                  <Grid style={{ width:'100%' }}>
+                  <Grid style={{ width: '100%' }}>
                     <TextField
                       variant="outlined"
                       required
@@ -139,9 +139,9 @@ export default function Index() {
                   <p onClick={movToRight} className="only-mov" >No tengo cuenta → </p>
                 </form>
               </div>
-              
+
               <div className="overlay-container">
-                  <div className="overlay">
+                <div className="overlay">
                   <div className="overlay-panel overlay-left">
 
 
@@ -156,8 +156,8 @@ export default function Index() {
                   <div className="overlay-panel overlay-right">
                     <h1>¿Nuevo por acá?</h1>
                     <p>Registre su perfil y aumente sus ingresos.</p>
-                    <button className="ghost" id="signUp" 
-                    onClick={frontSignUp}
+                    <button className="ghost" id="signUp"
+                      onClick={frontSignUp}
                     >Registrar</button>
 
 
@@ -169,7 +169,7 @@ export default function Index() {
           </Container>
         </div>
       </div>
-    
+
     </div>
   );
 }
