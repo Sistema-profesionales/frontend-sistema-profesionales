@@ -16,8 +16,8 @@ import StepPersonalData from './StepPersonalData';
 import StepLocationWork from './StepLocationWork';
 import { AppContextRegister } from '../../../context/AppContextRegister';
 import Alert from '../../globals/Alert';
-
-
+import { createUserProfessional } from '../../../factory/users';
+import { useHistory } from 'react-router-dom';
 
 const useQontoStepIconStyles = makeStyles({
     root: {
@@ -70,6 +70,7 @@ const ColorlibConnector = withStyles({
         '& $line': {
             backgroundImage:
                 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+                fontWeight: 'bold'
         },
     },
     completed: {
@@ -102,6 +103,7 @@ const useColorlibStepIconStyles = makeStyles({
         backgroundImage:
             'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
         boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+        fontWeight: 'bold'
     },
     completed: {
         backgroundImage:
@@ -151,7 +153,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function getSteps() {
-    return ['Validar mi RUT', 'Mis datos personales', 'Donde te gustaria trabajar'];
+    return ['Validar mi RUT', 'Mis datos personales', 'Donde me gustaria trabajar'];
 }
 
 function getStepContent(step) {
@@ -168,6 +170,7 @@ function getStepContent(step) {
 }
 
 export default function CustomizedSteppers() {
+    let history = useHistory();
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
@@ -175,18 +178,53 @@ export default function CustomizedSteppers() {
     const [alert, setAlert] = React.useState(undefined);
     const [isUserValid, setIsUserValid] = React.useState(false);
     const [professional, setProfessional] = React.useState(undefined);
+    const [success, setSuccess] = React.useState(false);
     const [values, setValues] = React.useState({
         region: null,
         provincie: null,
         commune: null
     });
 
+    const saveUser = async () => {
+    try {
+      let newUserProfessional = await createUserProfessional(sendObject);
+      //console.log(newUserProfessional);
+      if (newUserProfessional) {
+        setAlert({
+          variant: 'filled',
+          severity: 'success',
+          message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
+          loading: true
+        });
+
+        setTimeout(() => {
+          history.push("/");
+        }, 3000);
+      }
+    } catch (error) {
+      console.log(error.message);
+      setAlert({
+        variant: 'filled',
+        severity: 'error',
+        message: error.message
+      });
+    }
+  }
+
     const handleChangeInputText = (event) => {
-        const { name, value } = event.target;
+        let { name, value } = event.target;
+        // let rut = '';
+        // if(name === 'rut') {
+        //     console.log("RUUUUT");
+        //     if(value.length > 0 && (value.includes(".") || value.includes(","))) {
+        //         rut = value.replace(".").replace(".");
+        //         console.log(rut);
+        //     }
+        // }
         setSendObject({ ...sendObject, [name]: value });
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
 
         if(activeStep === 1 && sendObject) {
             if(!sendObject.phone || !sendObject.email || !sendObject.password || !sendObject.passwordConfirm) {
@@ -206,13 +244,23 @@ export default function CustomizedSteppers() {
                     });
     
                     return;
-                } else {
-                    setAlert(undefined);
-                }
+                } 
+                // else {
+                //     if(alert?.message === 'Las contraseñas no coinciden')
+                //     setAlert(undefined);
+                // }
             }
         }
 
-        setAlert(undefined);
+        if(activeStep === 2 && sendObject) {
+            // console.log("end step ");
+            // console.log(sendObject);
+            
+            await saveUser();
+            return;
+        }
+
+        // setAlert(undefined);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
@@ -224,7 +272,6 @@ export default function CustomizedSteppers() {
         setActiveStep(0);
     };
 
-    console.log(sendObject);
 
     return (
         <AppContextRegister.Provider value={{
@@ -240,7 +287,9 @@ export default function CustomizedSteppers() {
             professional,
             setProfessional,
             values,
-            setValues
+            setValues,
+            success,
+            setSuccess
         }}>
             
             <div className={classes.root}>

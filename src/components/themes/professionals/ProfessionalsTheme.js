@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import styles from './style.css';
 import { AppContextProfessionals } from '../../../context/AppProfessionalsContext';
+import { getUserLocalStorage } from '../../../factory/users';
 import AppBar from './AppBar';
 import Sidebar from './SideBar';
 import { BrowserRouter } from "react-router-dom";
@@ -30,6 +31,7 @@ function Copyright() {
 const useStyles = makeStyles(theme => styles(theme));
 // EXPORTAR PROFESSIONALSTHEME
 export default function Dashboard(props) {
+  const userLocalStorage = getUserLocalStorage();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -39,7 +41,8 @@ export default function Dashboard(props) {
     <BrowserRouter>
       <AppContextProfessionals.Provider value={{
         open,
-        setOpen
+        setOpen,
+        userLocalStorage
       }}>
         <div className={classes.root}>
           <CssBaseline />
@@ -54,7 +57,7 @@ export default function Dashboard(props) {
             <Container maxWidth="lg" className={classes.container} style={{ maxWidth: '100%' }}>
               <Grid container spacing={3} style={{ maxWidth: '100%', flexBasis: 'none' }}>
                 <Grid item xs={12} md={12} lg={12}>
-                  <Paper className={fixedHeightPaper}>
+                  <Paper className={classes.paper}>
                     { /* AQUI VA EL CONTENIDO DINAMICO */}
                     {props.children}
                   </Paper>

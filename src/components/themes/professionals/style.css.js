@@ -78,5 +78,8 @@ export default function styles (theme) {
         fixedHeight: {
           height: 240,
         },
+        icons:{
+          fontSize: '35px'
+        }
       };
 }

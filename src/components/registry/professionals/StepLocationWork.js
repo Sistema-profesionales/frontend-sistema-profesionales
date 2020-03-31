@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import { AppContextRegister } from '../../../context/AppContextRegister';
 import { getRegions, getProvinciesByRegion } from '../../../factory/regions';
 import { getCommunesByProvince } from '../../../factory/provincies';
@@ -13,7 +13,6 @@ export default function StepPersonalData() {
     const [communes, setCommunes] = useState([]);
 
     const {
-        setActiveStep,
         professional,
         setSendObject,
         sendObject,
@@ -32,6 +31,8 @@ export default function StepPersonalData() {
             passwordConfirm: sendObject.passwordConfirm || null,
             specialities: professional?.specialities
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -59,7 +60,7 @@ export default function StepPersonalData() {
         }
         regions();
 
-    }, []);
+    }, [values]);
 
     const getProvincesRegion = async (regionId) => {
         try {
@@ -87,17 +88,15 @@ export default function StepPersonalData() {
         }
       }
 
-    // console.log(sendObject);
-
     return (
         <React.Fragment>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} style={{ padding: '25px' }}>
                 <Grid item xs={12} sm={12}>
                     <Typography variant="h6" gutterBottom>
                         Continuemos {`${professional?.lastNames}, ${professional?.names}`}
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
-                        Estas a un paso de completar tu informacion, si deseas puedes indicarnos en donde te gustaria trabajar o si gustas puedes completar esta informacion mas tarde
+                    Estas a un paso de completar tu información, si deseas puedes indicarnos en donde te gustaría trabajar o si gustas <strong>puedes completar esta información mas tarde</strong>
                     </Typography>
                 </Grid>
 

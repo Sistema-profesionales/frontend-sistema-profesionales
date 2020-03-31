@@ -11,11 +11,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getAreas } from '../../factory/areas';
 import { getRegions, getProvinciesByRegion } from '../../factory/regions';
 import { getCommunesByProvince } from '../../factory/provincies';
 import { createUserProfessional } from '../../factory/users';
-import { getEntitiesByAreaAndCommune } from '../../factory/entities';
+import { getAllEntities } from '../../factory/entities';
 import { AppContextRegister } from '../../context/AppContextRegister';
 import Alert from '../../components/globals/Alert';
 import './register.css';
@@ -44,8 +43,6 @@ const useStyles = makeStyles(theme => ({
 export default function RegisterEntity() {
   let history = useHistory();
   const classes = useStyles();
-
-  const [areas, setAreas] = useState([]);
   const [entities, setEntities] = useState([]);
   const [regions, setRegions] = useState([]);
   const [provincies, setProvincies] = useState([]);
@@ -80,25 +77,6 @@ export default function RegisterEntity() {
   }
 
   useEffect(() => {
-    async function areas() {
-      try {
-        let areas = await getAreas();
-
-        for (let i = 0; i < areas.length; i++) {
-          areas[i]["title"] = areas[i].name;
-        }
-
-        setAreas(areas);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    areas();
-
-  }, []);
-
-
-  useEffect(() => {
     async function regions() {
       try {
         let regions = await getRegions();
@@ -108,6 +86,8 @@ export default function RegisterEntity() {
         }
 
         setRegions(regions);
+
+        await getEntities();
       } catch (error) {
         console.log(error);
       }
@@ -116,14 +96,12 @@ export default function RegisterEntity() {
 
   }, []);
 
-  const getEntities = async (idArea, idCommune) => {
+  const getEntities = async () => {
     try {
-      let entities = await getEntitiesByAreaAndCommune(idArea, idCommune);
+      let entities = await getAllEntities();
       for (let i = 0; i < entities.length; i++) {
-        entities[i]["title"] = entities[i].companyName;
+        entities[i]["title"] = entities[i].name;
       }
-
-      // console.log(entities);
 
       setEntities(entities);
     } catch (error) {
@@ -175,7 +153,7 @@ export default function RegisterEntity() {
         }, 3000);
       }
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
       setAlert({
         variant: 'filled',
         severity: 'error',
@@ -267,10 +245,10 @@ export default function RegisterEntity() {
                   variant="outlined"
                   required
                   fullWidth
-                  name="login"
-                  label="Login"
-                  type="text"
-                  id="login"
+                  name="password"
+                  label="Contraseña"
+                  type="password"
+                  id="password"
                   onChange={handleChangeInputText}
                 />
               </Grid>
@@ -279,10 +257,10 @@ export default function RegisterEntity() {
                   variant="outlined"
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
+                  name="passwordConfirm"
+                  label="Confirmar contraseña"
                   type="password"
-                  id="password"
+                  id="passwordConfirm"
                   autoComplete="current-password"
                   onChange={handleChangeInputText}
                 />
@@ -355,36 +333,10 @@ export default function RegisterEntity() {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  disabled={values.commune ? false : true}
-                  id="auto-areas"
-                  options={areas}
-                  getOptionLabel={option => option.title}
-                  value={values.area}
-                  onChange={(event, newValue) => {
-                    setValues({ ...values, area: newValue });
-                    if (newValue && values.commune) getEntities(newValue.id, values.commune.id);
-                    else setEntities([]);
-                    console.log(entities);
-                  }}
-                  style={{ width: '100%' }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label="Areas"
-                      variant="outlined"
-                      placeholder="Buscar"
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
 
-
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <Autocomplete
-                  disabled={values.commune ? false : true}
+                  // disabled={values.commune ? false : true}
                   id="auto-entities"
                   options={entities}
                   getOptionLabel={option => option.title}
@@ -392,9 +344,6 @@ export default function RegisterEntity() {
                   onChange={(event, newValue) => {
                     setValues({ ...values, entity: newValue });
                     if (newValue) setSendObject({ ...sendObject, entityId: newValue.id });
-                    // if (newValue && values.commune) getEntities(newValue.id, values.commune.id);
-                    // else setEntities([]);
-                    // console.log(entities);
                   }}
                   style={{ width: '100%' }}
                   renderInput={params => (

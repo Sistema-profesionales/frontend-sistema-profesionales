@@ -8,9 +8,10 @@ import { AppContextProfessionals } from '../../../context/AppProfessionalsContex
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
+import FolderIcon from '@material-ui/icons/Folder';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Link } from 'react-router-dom';
 
 
@@ -35,7 +36,7 @@ export default function Sidebar() {
         <Link to="/user/professional/profile" style={{ textDecoration: 'none', color: '#212121' }}>
           <ListItem button>
             <ListItemIcon>
-              <DashboardIcon />
+              <AccountCircleIcon className={classes.icons} />
             </ListItemIcon>
             <ListItemText primary="Mi perfil" />
           </ListItem>
@@ -43,7 +44,7 @@ export default function Sidebar() {
         <Link to="/user/professional/documents" style={{ textDecoration: 'none', color: '#212121' }}>
           <ListItem button>
             <ListItemIcon>
-              <ShoppingCartIcon />
+              <FolderIcon className={classes.icons} />
             </ListItemIcon>
             <ListItemText primary="Mis documentos" />
           </ListItem>
@@ -51,15 +52,15 @@ export default function Sidebar() {
         <Link to="/user/professional/calendar" style={{ textDecoration: 'none', color: '#212121' }}>
           <ListItem button>
             <ListItemIcon>
-              <PeopleIcon />
+              <ScheduleIcon className={classes.icons} />
             </ListItemIcon>
             <ListItemText primary="Mi calendario" />
           </ListItem>
         </Link>
-        <Link to="#" onClick={() => { sessionStorage.removeItem("userLogged"); window.location.href="/"; }} style={{ textDecoration: 'none', color: '#212121' }}>
+        <Link to="#" onClick={() => { localStorage.removeItem("userLogged"); window.location.href="/"; }} style={{ textDecoration: 'none', color: '#212121' }}>
           <ListItem button>
             <ListItemIcon>
-              <PeopleIcon />
+              <ExitToAppIcon className={classes.icons} />
             </ListItemIcon>
             <ListItemText primary="Salir" />
           </ListItem>

@@ -1,51 +1,63 @@
 import React, { useContext, useState, useRef } from 'react';
-import { TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import { AppContextRegister } from '../../../context/AppContextRegister';
 import { getInfoUserMinsal } from '../../../factory/users';
 import ProgressButton from '../../globals/ProgressButton';
-import StepLocationWork from './StepLocationWork';
 import { formatRut, acceptNumbersInRut } from '../../../helpers/utilities';
 
 export default function FormRut() {
     const inputRut = useRef(null);
     const {
         handleChangeInputText,
-        sendObject,
-        alert,
-        setAlert,
         setSendObject,
+        sendObject,
+        setAlert,
         setActiveStep,
-        isUserValid,
         setIsUserValid,
-        professional,
-        setProfessional
+        setProfessional,
+        success,
+        setSuccess
     } = useContext(AppContextRegister);
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = React.useState(false);
     const [rutFormat, setRutFormat] = React.useState(undefined);
 
 
     const handleBlurRut = () => {
-        if (sendObject && sendObject.rut) {
-            let rut = formatRut(sendObject.rut);
+        try {
+            if (sendObject && sendObject.rut) {
+                let rut = formatRut(sendObject.rut);
+                if (rut && rut.rutFormatter) {
+                    console.log(rut);
 
-            if (rut && rut.rutFormatter) {
-                setRutFormat({
-                    rutFormatter: rut.rutFormatter,
-                    rutQuery: rut.rutQuery
-                });
+                    setRutFormat({
+                        rutFormatter: rut.rutFormatter,
+                        rutQuery: rut.rutQuery
+                    });
 
-            } else {
-                setRutFormat(undefined);
-            }
+                    setSendObject({
+                        ...sendObject,
+                        rut: rut.rutQuery
+                    })
+    
+                } else {
+                    setRutFormat(undefined);
+                }
+            }    
+        } catch (error) {
+            setAlert({
+                variant: 'filled',
+                severity: 'error',
+                message: error.message
+            });
         }
+        
     }
 
     const handleKeyPressRut = () => {
         if (sendObject && sendObject.rut) {
             let accepts = acceptNumbersInRut(sendObject.rut);
 
-            console.log(accepts);
+            // console.log(accepts);
 
             setRutFormat({
                 rutFormatter: accepts
@@ -91,10 +103,6 @@ export default function FormRut() {
         }
     }
 
-    if (success) {
-        return (<StepLocationWork></StepLocationWork>);
-    }
-
     return (
         <React.Fragment>
             <Grid item xs={12} sm={12}>
@@ -118,7 +126,7 @@ export default function FormRut() {
                 loading,
                 success,
                 setSucess: (status) => { setSuccess(status) },
-                text: 'VALIDAR MI INFORMACION',
+                text: success ? 'ESTAS VERIFICADO' : 'VERIFICAR MI INFORMACION',
                 setLoading: (status) => { setLoading(status) }
             }}></ProgressButton>
         </React.Fragment>

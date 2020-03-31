@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import { AppContextRegister } from '../../../context/AppContextRegister';
 
 export default function StepPersonalData() {
     const {
-        setActiveStep,
         professional,
         setSendObject,
         sendObject,
@@ -15,14 +14,16 @@ export default function StepPersonalData() {
     React.useEffect(() => {
         setSendObject({
             ...sendObject,
-            names: professional?.names,
-            lastNames: professional?.lastNames,
+            names: professional?.names.trimStart(),
+            lastNames: professional?.lastNames.trimStart(),
             email: sendObject?.email || null,
             phone: sendObject?.phone || null,
             password: sendObject?.password || null,
             passwordConfirm: sendObject.passwordConfirm || null,
+            professions: professional?.professions,
             specialities: professional?.specialities
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // console.log(sendObject);
@@ -30,12 +31,12 @@ export default function StepPersonalData() {
     return (
         <React.Fragment>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={12} style={{ padding: '25px' }}>
                     <Typography variant="h6" gutterBottom>
                         Bienvenid@ {`${professional?.lastNames}, ${professional?.names}`}
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
-                        Continua completando tu informacion y ya estaras <strong>LISTO</strong> para que las instituciones puedan <strong>ENCONTRARTE</strong>
+                    Continúa completando tu información y ya estarás <strong>LISTO</strong> para que las instituciones puedan <strong>ENCONTRARTE</strong>
                     </Typography>
                 </Grid>
 

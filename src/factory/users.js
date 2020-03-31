@@ -1,5 +1,9 @@
 import { BASE_URI_REST_API } from '../constants/base.uri';
 
+export function getUserLocalStorage () {
+  return JSON.parse(localStorage.getItem("userLogged"));;
+}
+
 export async function getInfoUserMinsal(rut) {
   try {
     const res = await fetch(`${BASE_URI_REST_API}/users/getInfo?rut=${rut}`, {

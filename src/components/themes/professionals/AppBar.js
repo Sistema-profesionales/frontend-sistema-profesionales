@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => styles(theme));
 export default function SearchAppBar() {
   const classes = useStyles();
 
-  const { open, setOpen } = useContext(AppContextProfessionals);
+  const { open, setOpen, userLocalStorage } = useContext(AppContextProfessionals);
 
   return (
     <AppBar style={{ width: '100%' }} position="absolute" className={clsx(classes.appBarShift, open && classes.appBarShift)}>
@@ -28,10 +28,10 @@ export default function SearchAppBar() {
           onClick={() => { setOpen(!open); }}
           className={clsx(classes.menuButton)}
         >
-          <MenuIcon />
+          <MenuIcon className={classes.icons} />
         </IconButton>
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-          Dashboard
+          Bienvenid@ { `${userLocalStorage.names} ${userLocalStorage.lastNames}`}
       </Typography>
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">

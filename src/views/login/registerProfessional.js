@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import './register.css';
-import { useHistory } from 'react-router-dom';
 import Stepper from '../../components/registry/professionals/Stepper';
 
 const useStyles = makeStyles(theme => ({
@@ -33,37 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function RegisterProfessional() {
-  let history = useHistory();
   const classes = useStyles();
-
-  // const [sendObject, setSendObject] = useState(undefined);
-
-
-  // const saveUser = async () => {
-  //   try {
-  //     let newUserProfessional = await createUserProfessional(sendObject);
-  //     //console.log(newUserProfessional);
-  //     if (newUserProfessional) {
-  //       setAlert({
-  //         variant: 'filled',
-  //         severity: 'success',
-  //         message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
-  //         loading: true
-  //       });
-
-  //       setTimeout(() => {
-  //         history.push("/");
-  //       }, 3000);
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //     setAlert({
-  //       variant: 'filled',
-  //       severity: 'error',
-  //       message: error.message
-  //     });
-  //   }
-  // }
 
   return (
     <Container component="main" maxWidth="md">

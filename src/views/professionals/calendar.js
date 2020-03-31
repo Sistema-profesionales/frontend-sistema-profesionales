@@ -1,7 +1,8 @@
 import React from 'react';
+import Disponibility from '../../components/themes/professionals/disponibility/index';
 
 export default function Index () {
     return (
-        <div>MY CALENDAR</div>
+        <Disponibility></Disponibility>
     );
 }
