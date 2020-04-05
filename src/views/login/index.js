@@ -61,15 +61,17 @@ export default function Index() {
         });
         return;
       }
+
+      setAlert({
+        variant: 'filled',
+        severity: 'success',
+        message: "Ingresando al sistema",
+        loading: true
+      });
+
       let queryUser = await loginUser(userAccess);
       if (queryUser) {
         localStorage.setItem("userLogged", JSON.stringify(queryUser));
-        setAlert({
-          variant: 'filled',
-          severity: 'success',
-          message: "Ingresando al sistema",
-          loading: true
-        });
 
         if (queryUser.entityId) {
           setTimeout(() => {
@@ -83,6 +85,8 @@ export default function Index() {
             setRedirect({
               path: "/user/professional"
             });
+
+            setAlert(undefined);
           }, 2000);
         }
 

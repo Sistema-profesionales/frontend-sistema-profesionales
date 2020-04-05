@@ -14,6 +14,8 @@ import AddDisponibility from './AddDisponibility';
 import ProgressBackDrop from '../../../globals/ProgressBackDrop';
 import Alert from '../../../globals/Alert';
 import Confirmation from '../../../globals/Confirmation';
+import { daysOfWeek } from '../../../../constants/timesAndDays';
+import CopyDisponibilities from './CopyDisponibilities';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,29 +64,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function getDays() {
-    return [
-        { "id": 0, "day": "Lunes" },
-        { "id": 1, "day": "Martes" },
-        { "id": 2, "day": "Miercoles" },
-        { "id": 3, "day": "Jueves" },
-        { "id": 4, "day": "Viernes" },
-        { "id": 5, "day": "Sabado" },
-        { "id": 6, "day": "Domingo" },
-    ]
-}
-
 export default function TabsOfDays() {
-    let days = getDays();
+    let days = daysOfWeek;
     const classes = useStyles();
     const [alert, setAlert] = React.useState(undefined);
     const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
     const [confirmation, setConfirmation] = React.useState(undefined);
     const [value, setValue] = React.useState(0);
     const [addDisponibility, setAddDisponibility] = React.useState([]);
+    const [disponibilityByDay, setDisponibilityByDay] = React.useState(undefined);
+    const [disponibilitiesUserBD, setDisponibilitiesUserBD] = React.useState(undefined);
     const [isAddDisponibility, setIsAddDisponibility] = React.useState(false);
     const [saveDisponibility, setSaveDisponibility] = React.useState(false);
     const [showConfirmation, setShowConfirmation] = React.useState(false);
+    const [showCopyDisponibilties, setShowCopyDisponibilties] = React.useState(false);
     const { userLocalStorage } = useContext(AppContextProfessionals);
     const [sendObject, setSendObject] = React.useState({
         userId: userLocalStorage.id,
@@ -98,23 +91,37 @@ export default function TabsOfDays() {
         endHour: null
     });
 
+    const disponibilitiesByDay = async (val) => {
+        try {
+            let findValue = days.find(x => x.id === val);
+            let array = await getDisponibilityUser(userLocalStorage.id, findValue?.day);
+            let existsDisponibility = array.filter(x => x.dayOfWeek === findValue?.day);
+
+            return existsDisponibility;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const getDisponibilityUserBD = async (val) => {
         try {
             setShowProgressBackDrop(true);
-            let findValue = days.find(x => x.id === val);
-            let array = await getDisponibilityUser(userLocalStorage.id, findValue.day);
-            let existsDisponibility = array.filter(x => x.dayOfWeek === findValue.day);
+            let existsDisponibility = await disponibilitiesByDay(val);
             let elements = [];
 
             if (existsDisponibility.length > 0) {
                 for (let i = 0; i < existsDisponibility.length; i++) {
-                    elements.push(<AddDisponibility element={existsDisponibility[i]} handleHourStart={null} />);
+                    elements.push(<AddDisponibility key={`dis${i}`} element={existsDisponibility[i]} handleHourStart={null} />);
                 }
                 
+                setDisponibilityByDay({
+                    userId: userLocalStorage.id,
+                    dayOfWeek: existsDisponibility[0].dayOfWeek,
+                    disponibilities: existsDisponibility
+                });
                 setAlert(undefined);
             } else {
                 setAlert({
-                    // variant: 'filled',
                     severity: 'warning',
                     message: `No has configurado la disponibilidad para este dia`
                 });
@@ -137,15 +144,44 @@ export default function TabsOfDays() {
             ...sendObject,
             dayOfWeek
         })
+        // eslint-disable-next-line
     }, []);
 
-    const handleClickSaveDisponibility = async () => {
+
+    const setDisponibilitiesByDay = async () => {
+        let object = {};
+         for(let i = 0; i < daysOfWeek.length; i++) {
+             let disponibilities = await disponibilitiesByDay(daysOfWeek[i].id);
+             // console.log(disponibilities);
+             object[daysOfWeek[i].day] =  disponibilities?.length;
+             // array.push(object);
+         }
+
+         setDisponibilitiesUserBD(object);
+    }
+
+    React.useEffect(() => {
+       setDisponibilitiesByDay();
+       // eslint-disable-next-line
+    }, []);
+
+    const handleClickSaveDisponibility = async (array) => {
         try {
             setShowProgressBackDrop(true);
-            let create = await createDisponibility(sendObject);
-            console.log(create);
+            if(Array.isArray(array) && array.length > 0) {
+                // console.log("multiple");
+                setShowCopyDisponibilties(false);
+                for(let i = 0; i < array.length; i++) {
+                    await createDisponibility(array[i]);
+                }
+            } else {
+                // console.log("solo uno");
+                await createDisponibility(sendObject);      
+            }
+            // console.log(create);
             setIsAddDisponibility(false);
             getDisponibilityUserBD(value);
+            setDisponibilitiesByDay();
         } catch (error) {
             console.log(error);
         } finally {
@@ -158,6 +194,10 @@ export default function TabsOfDays() {
         }
     }
 
+    const handleCopyDisponibilities = () => {
+        setShowCopyDisponibilties(true);
+    }
+
     const handleClickDeleteDisponibility = (e) => {
         setShowConfirmation(true);
 
@@ -165,8 +205,9 @@ export default function TabsOfDays() {
             try {
                 setShowConfirmation(false);
                 setShowProgressBackDrop(true);
-                let deleteDisponibility = await deleteDisponibilityById(e.id);
+                await deleteDisponibilityById(e.id);
                 getDisponibilityUserBD(value);
+                setDisponibilitiesByDay();
             } catch (error) {
                 console.log(error);
             } finally {
@@ -198,7 +239,7 @@ export default function TabsOfDays() {
         getDisponibilityUserBD(newValue);
     };
 
-
+    // console.log(disponibilitiesUserBD);
     return (
         <AppContextDisponibility.Provider value={{
             values,
@@ -218,7 +259,11 @@ export default function TabsOfDays() {
             setIsAddDisponibility,
             handleClickDeleteDisponibility,
             showConfirmation,
-            setShowConfirmation
+            setShowConfirmation,
+            showCopyDisponibilties, 
+            setShowCopyDisponibilties,
+            disponibilitiesUserBD,
+            disponibilityByDay
         }}>
             <div className={classes.root}>
 
@@ -236,10 +281,18 @@ export default function TabsOfDays() {
                 </Tabs>
                 {
                     <Grid item lg={12} style={{ padding: '15px' }}>
-
-                        <ProgressBackDrop context={AppContextDisponibility}></ProgressBackDrop>
-                        <Confirmation {...confirmation} context={AppContextDisponibility}></Confirmation>
+                        {
+                            showCopyDisponibilties ?
+                            <CopyDisponibilities></CopyDisponibilities>
+                            : null
+                        }
+                        <ProgressBackDrop context={AppContextDisponibility}></ProgressBackDrop>                        
                         <Grid item lg={12} xs={12}>
+                        {
+                            showConfirmation ?
+                            <Confirmation {...confirmation} context={AppContextDisponibility}></Confirmation>
+                            : null
+                        }
                             <Alert {...alert} context={AppContextDisponibility}></Alert>
                             <Grid item xs={12} sm={12} style={{ height: '40px', width: '100%', float: 'left' }}>
                                 <Typography variant="h6" display="block" style={{ textAlign: 'center' }} gutterBottom>
@@ -250,9 +303,19 @@ export default function TabsOfDays() {
                                 addDisponibility.map(e => (e))
                             }
 
-                            <div className={classes.buttonAddDisponibility} onClick={() => { setIsAddDisponibility(true); setAddDisponibility([...addDisponibility, <AddDisponibility element={undefined} />]) }}>
+                            <div className={classes.buttonAddDisponibility}>
                                 {
-                                    !isAddDisponibility && <Button color="primary">Agregar Disponibilidad</Button>
+                                    !isAddDisponibility && 
+                                    <Button color="primary" onClick={() => {
+                                        setIsAddDisponibility(true); 
+                                        setAddDisponibility([...addDisponibility, <AddDisponibility key={addDisponibility.length} element={undefined} />]) 
+                                    }}>Agregar Disponibilidad</Button>
+                                }
+                                {
+                                    !isAddDisponibility && addDisponibility.length > 0 && 
+                                    // disponibilitiesUserBD?.find(x => x === 0) &&
+                                    <Button color="primary" onClick={handleCopyDisponibilities}>Repetir disponibilidad</Button>
+
                                 }
                             </div>
                         </Grid>

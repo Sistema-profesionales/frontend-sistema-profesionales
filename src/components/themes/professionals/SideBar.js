@@ -49,12 +49,12 @@ export default function Sidebar() {
             <ListItemText primary="Mis documentos" />
           </ListItem>
         </Link>
-        <Link to="/user/professional/calendar" style={{ textDecoration: 'none', color: '#212121' }}>
+        <Link to="/user/professional/disponibilities" style={{ textDecoration: 'none', color: '#212121' }}>
           <ListItem button>
             <ListItemIcon>
               <ScheduleIcon className={classes.icons} />
             </ListItemIcon>
-            <ListItemText primary="Mi calendario" />
+            <ListItemText primary="Disponibilidad" />
           </ListItem>
         </Link>
         <Link to="#" onClick={() => { localStorage.removeItem("userLogged"); window.location.href="/"; }} style={{ textDecoration: 'none', color: '#212121' }}>

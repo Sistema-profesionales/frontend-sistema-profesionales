@@ -14,7 +14,7 @@ export default function ProgressBackDrop(props) {
     const { context } = props; 
     const classes = useStyles();
 
-    const { showProgressBackDrop, setShowProgressBackDrop } = useContext(context);
+    const { showProgressBackDrop } = useContext(context);
     return (
         <div>
             <Backdrop className={classes.backdrop} open={showProgressBackDrop}>

@@ -7,10 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import { AppContextDisponibility } from '../../../../context/AppContextDisponibility';
 import CloseIcon from '@material-ui/icons/Close';
-
-const timeSlots = Array.from(new Array(24 * 2)).map(
-    (_, index) => `${index < 20 ? '0' : ''}${Math.floor(index / 2)}:${index % 2 === 0 ? '00' : '30'}`,
-);
+import { timeSlots } from '../../../../constants/timesAndDays';
 
 export default function AddDisponibility(props) {
     let { element } = props;
@@ -24,7 +21,11 @@ export default function AddDisponibility(props) {
         handleClickDeleteDisponibility,
     } = useContext(AppContextDisponibility);
 
-    let value = Math.floor(Math.random() * 110000) + 1;
+    let value = addDisponibility.length;
+
+    // console.log(value);
+
+    // if(isAddDisponibility) return null;
 
     return (
         <Grid container key={`frag-${value}`} spacing={3}>
@@ -68,9 +69,9 @@ export default function AddDisponibility(props) {
                         </Tooltip>
                     </div>
                     :
-                    <Tooltip title="Eliminar disponibilidad">
+                    <div>
                         <DeleteIcon style={{ marginTop: '34px', cursor: 'pointer' }} onClick={() => { handleClickDeleteDisponibility(element); }} />
-                    </Tooltip>
+                    </div>
                 }
             </Grid>
         </Grid>

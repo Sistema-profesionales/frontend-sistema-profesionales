@@ -1,24 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import styles from "../default/defaultStyles.css";
 import { BrowserRouter } from "react-router-dom";
 import AppBar from "./AppBar";
+import { AppContextEntities } from '../../../context/AppEntitiesContext';
+import { getUserLocalStorage } from '../../../factory/users';
 const useStyles = makeStyles(theme => styles(theme));
 
 // EXPORTAR ENTITIESTHEME
-
 export default function EntitiesTheme(props) {
   const classes = useStyles();
+  const userLocalStorage = getUserLocalStorage();
+  // console.log(userLocalStorage);
+
+  const [valuesForm, setValuesForm] = useState(undefined);
+  const [openFullScreenModal, setopenFullScreenModal] = useState(false);
+  const [professionalSelected, setProfessionalSelected] = useState(undefined);
+  const [redirect, setRedirect] = useState(false);
+  const [chipsProfessionals, setChipsProfessionals] = useState([]);
+  const [chipsDays, setChipsDays] = useState([]);
+
+  if(!userLocalStorage) return (<Redirect to="/" />);  
+
   return (
-    <BrowserRouter>
-      <React.Fragment>
-        <AppBar></AppBar>
-        <CssBaseline />
-        <main className={classes.layout}>
-          {props.children}
-        </main>
-      </React.Fragment>
-    </BrowserRouter>
+    <AppContextEntities.Provider value={{
+      valuesForm,
+      setValuesForm,
+      openFullScreenModal, 
+      setopenFullScreenModal, 
+      professionalSelected,
+      setProfessionalSelected,
+      redirect,
+      setRedirect,
+      userLocalStorage,
+      chipsProfessionals,
+      setChipsProfessionals,
+      chipsDays, 
+      setChipsDays
+    }}>
+      <BrowserRouter>
+        <React.Fragment>
+          <AppBar></AppBar>
+          <CssBaseline />
+          <main className={classes.layout} style={{ marginTop: '0px', paddingRight: '0px' }}>
+            {props.children}
+          </main>
+        </React.Fragment>
+      </BrowserRouter>
+    </AppContextEntities.Provider>
   );
 }
