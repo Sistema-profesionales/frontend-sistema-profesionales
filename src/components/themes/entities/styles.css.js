@@ -20,7 +20,7 @@ const styles =  (theme) => {
           'overflow': 'hidden',
           'text-overflow': 'ellipsis',
           'margin-right': 5,
-        }
+        },
       }
   };
 

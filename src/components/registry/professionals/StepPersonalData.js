@@ -14,8 +14,8 @@ export default function StepPersonalData() {
     React.useEffect(() => {
         setSendObject({
             ...sendObject,
-            names: professional?.names.trimStart(),
-            lastNames: professional?.lastNames.trimStart(),
+            names: professional?.names?.trimStart(),
+            lastNames: professional?.lastNames?.trimStart(),
             email: sendObject?.email || null,
             phone: sendObject?.phone || null,
             password: sendObject?.password || null,

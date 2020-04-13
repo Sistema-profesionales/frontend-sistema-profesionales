@@ -12,7 +12,7 @@ import { AppContextProfessionals } from '../../../context/AppProfessionalsContex
 import { getUserLocalStorage } from '../../../factory/users';
 import AppBar from './AppBar';
 import Sidebar from './SideBar';
-import { BrowserRouter, Redirect } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -34,7 +34,7 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
-  if(!userLocalStorage) return (<Redirect to="/" />);  
+  if(!userLocalStorage) window.location.href = '/';  
 
   return (
     <BrowserRouter>

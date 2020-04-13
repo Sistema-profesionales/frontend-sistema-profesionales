@@ -21,7 +21,6 @@ export default function FormRut() {
     const [loading, setLoading] = useState(false);
     const [rutFormat, setRutFormat] = React.useState(undefined);
 
-
     const handleBlurRut = () => {
         try {
             if (sendObject && sendObject.rut) {
@@ -56,9 +55,6 @@ export default function FormRut() {
     const handleKeyPressRut = () => {
         if (sendObject && sendObject.rut) {
             let accepts = acceptNumbersInRut(sendObject.rut);
-
-            // console.log(accepts);
-
             setRutFormat({
                 rutFormatter: accepts
             });

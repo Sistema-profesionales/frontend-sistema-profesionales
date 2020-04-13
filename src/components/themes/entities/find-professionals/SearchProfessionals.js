@@ -6,6 +6,8 @@ import { Grid, TextField } from "@material-ui/core";
 import Chip from '@material-ui/core/Chip';
 import styles from "../styles.css";
 import { getProfessions } from '../../../../factory/professions';
+import { getFindProfessionalsByFilters } from '../../../../factory/users';
+import { getCommunesByProvinceAndUserId } from '../../../../factory/provincies';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppContextEntities } from '../../../../context/AppEntitiesContext';
 import ResultSearch from './ResultSearch';
@@ -16,14 +18,16 @@ const useStyles = makeStyles(theme => styles(theme));
 // EXPORT FORMSEARCH
 export default function FormSearch() {
   const classes = useStyles();
-  // const [redirect, setRedirect] = useState(false);
 
   const [professions, setProfessions] = React.useState([]);
+  const [communes, setCommunes] = React.useState([]);
+  const [communeSelected, setCommuneSelected] = React.useState([]);
+  const [resultSearch, setResultSearch] = React.useState([]);
 
-  const { setValuesForm, valuesForm } = useContext(AppContextEntities);
+  const { setValuesForm, valuesForm, userLocalStorage } = useContext(AppContextEntities);
 
   useEffect(() => {
-    async function loadProfessions() {
+    async function loadData() {
       try {
         const professions = await getProfessions();
         for (let i = 0; i < professions.length; i++) {
@@ -31,14 +35,38 @@ export default function FormSearch() {
         }
         setProfessions(professions);
 
+        const communes = await getCommunesByProvinceAndUserId(userLocalStorage.id);
+        for (let i = 0; i < communes.length; i++) {
+          communes[i]["title"] = communes[i]["name"];
+        }
+        setCommunes(communes);
+
+        let communeSelected = communes[communes.findIndex(x => x.id === userLocalStorage.communeId)];
+
+        setCommuneSelected([communeSelected]);
+
+        setValuesForm({
+          ...valuesForm,
+          communes: [communeSelected.id]
+        });
+
       } catch (error) {
         console.log(error);
       }
     }
-    loadProfessions();
+    loadData();
+    // eslint-disable-next-line
+  }, []);
 
-  }, [])
-  
+  const handleFindProfessionals = async () => {
+    try {
+      const data = await getFindProfessionalsByFilters(valuesForm);
+      setResultSearch(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Paper
       className={classes.paper}
@@ -47,7 +75,8 @@ export default function FormSearch() {
         paddingBottom: "100px",
         background: "#FAFAFA",
         boxShadow: "none",
-        marginTop: '0px'
+        marginTop: '0px',
+        backgroundColor: 'transparent !important'
       }}
     >
       <Typography
@@ -59,8 +88,8 @@ export default function FormSearch() {
         Encontrar profesionales disponibles
       </Typography>
       <React.Fragment>
-        <Grid container spacing={2} style={{ flexGrow: 1, marginBottom: '25px' }}>
-          <Grid item xs={12} sm={3}>
+        <Grid container spacing={2} style={{ flexGrow: 1, marginBottom: '25px', backgroundColor: 'transparent !important' }}>
+          <Grid item xs={12} sm={3} style={{ backgroundColor: 'transparent !important' }}>
             <Autocomplete
               multiple
               id="checkboxes-tags-demo"
@@ -70,25 +99,26 @@ export default function FormSearch() {
               loadingText="Cargando..."
               disablePortal
               getOptionLabel={(option) => option.title}
-              onChange={(event, newValue) => { 
-                  if(newValue.length > 0) {
-                    setValuesForm({
-                      ...valuesForm,
-                      professions: newValue.map(e => e.id)
-                    });
-                  } else {
-                    setValuesForm({
-                      ...valuesForm,
-                      professions: []
-                    });
-                  }
+              onChange={(event, newValue) => {
+                if (newValue.length > 0) {
+                  
+                  setValuesForm({
+                    ...valuesForm,
+                    professions: newValue.map(e => e.id)
+                  });
+                } else {
+                  setValuesForm({
+                    ...valuesForm,
+                    professions: []
+                  });
+                }
               }}
               renderTags={(value, getTagProps) => {
                 const tags = value.slice(0, 1).map((option, index) => (
                   <Chip label={option.title} {...getTagProps({ index })} className={classes.tag} />
-                ));   
+                ));
                 const length = value.length;
-      
+
                 return (
                   <div>
                     {tags}
@@ -103,35 +133,47 @@ export default function FormSearch() {
           </Grid>
 
           <Grid item xs={12} sm={3}>
-            <Autocomplete
+          <Autocomplete
               multiple
-              id="comunas"
-              options={[]}
+              id="communes-id"
+              options={communes}
               disableCloseOnSelect
               loading
-              getOptionLabel={option => option.title}
-              style={{ width: '100%' }}
-              onChange={(event, newValue) => { 
-                if(newValue.length > 0) {
+              loadingText="Cargando..."
+              disablePortal
+              getOptionLabel={(option) => option.name}
+              value={communeSelected}
+              onChange={(event, newValue) => {
+                setCommuneSelected([]);
+                if (newValue.length > 0) {
+                  setCommuneSelected([...newValue]);
                   setValuesForm({
                     ...valuesForm,
                     communes: newValue.map(e => e.id)
                   });
                 } else {
+                  setCommuneSelected([]);
                   setValuesForm({
                     ...valuesForm,
                     communes: []
                   });
                 }
               }}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Comunas"
-                  variant="outlined"
-                  placeholder="Buscar"
-                  fullWidth
-                />
+              renderTags={(value, getTagProps) => {
+                const tags = value.slice(0, 1).map((option, index) => (
+                  <Chip label={option.name} {...getTagProps({ index })} className={classes.tag} />
+                ));
+                const length = value.length;
+
+                return (
+                  <div>
+                    {tags}
+                    {length > 1 ? `+${length - 1}` : ''}
+                  </div>
+                );
+              }}
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" label="Comunas" placeholder="Comunas" />
               )}
             />
           </Grid>
@@ -145,8 +187,8 @@ export default function FormSearch() {
               loading
               getOptionLabel={option => option.title}
               style={{ width: '100%' }}
-              onChange={(event, newValue) => { 
-                if(newValue.length > 0) {
+              onChange={(event, newValue) => {
+                if (newValue.length > 0) {
                   setValuesForm({
                     ...valuesForm,
                     daysOfWeek: newValue.map(e => e.day)
@@ -162,9 +204,9 @@ export default function FormSearch() {
               renderTags={(value, getTagProps) => {
                 const tags = value.slice(0, 1).map((option, index) => (
                   <Chip label={option.title} {...getTagProps({ index })} className={classes.tag} />
-                ));   
+                ));
                 const length = value.length;
-      
+
                 return (
                   <div>
                     {tags}
@@ -191,8 +233,8 @@ export default function FormSearch() {
               options={timeSlots}
               loading
               style={{ width: '100%' }}
-              onChange={(event, newValue) => { 
-                if(newValue) {
+              onChange={(event, newValue) => {
+                if (newValue) {
                   setValuesForm({
                     ...valuesForm,
                     startHour: newValue
@@ -223,8 +265,9 @@ export default function FormSearch() {
               options={timeSlots}
               loading
               style={{ width: '100%' }}
-              onChange={(event, newValue) => { 
-                if(newValue) {
+              onBlur={handleFindProfessionals}
+              onChange={(event, newValue) => {
+                if (newValue) {
                   setValuesForm({
                     ...valuesForm,
                     endHour: newValue
@@ -263,7 +306,7 @@ export default function FormSearch() {
             </Button>
           </Grid> */}
         </Grid>
-        <ResultSearch></ResultSearch>
+        <ResultSearch data={resultSearch}></ResultSearch>
       </React.Fragment>
     </Paper>
   );

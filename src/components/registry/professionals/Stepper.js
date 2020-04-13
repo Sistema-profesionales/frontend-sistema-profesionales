@@ -159,11 +159,11 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return (<StepRut></StepRut>);
+            return (<StepRut></StepRut>) || null;
         case 1:
-            return (<StepPersonalData></StepPersonalData>);
+            return (<StepPersonalData></StepPersonalData>) || null;
         case 2:
-            return (<StepLocationWork></StepLocationWork>);
+            return (<StepLocationWork></StepLocationWork>) || null;
         default:
             return null;
     }
@@ -187,16 +187,15 @@ export default function CustomizedSteppers() {
 
     const saveUser = async () => {
     try {
+        setAlert({
+            variant: 'filled',
+            severity: 'success',
+            message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
+            loading: true
+        });
       let newUserProfessional = await createUserProfessional(sendObject);
       //console.log(newUserProfessional);
       if (newUserProfessional) {
-        setAlert({
-          variant: 'filled',
-          severity: 'success',
-          message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
-          loading: true
-        });
-
         setTimeout(() => {
           history.push("/");
         }, 3000);
@@ -213,19 +212,10 @@ export default function CustomizedSteppers() {
 
     const handleChangeInputText = (event) => {
         let { name, value } = event.target;
-        // let rut = '';
-        // if(name === 'rut') {
-        //     console.log("RUUUUT");
-        //     if(value.length > 0 && (value.includes(".") || value.includes(","))) {
-        //         rut = value.replace(".").replace(".");
-        //         console.log(rut);
-        //     }
-        // }
         setSendObject({ ...sendObject, [name]: value });
     }
 
     const handleNext = async () => {
-
         if(activeStep === 1 && sendObject) {
             if(!sendObject.phone || !sendObject.email || !sendObject.password || !sendObject.passwordConfirm) {
                 setAlert({
@@ -245,16 +235,13 @@ export default function CustomizedSteppers() {
     
                     return;
                 } 
-                // else {
-                //     if(alert?.message === 'Las contraseñas no coinciden')
-                //     setAlert(undefined);
-                // }
             }
         }
 
         if(activeStep === 2 && sendObject) {
             // console.log("end step ");
             // console.log(sendObject);
+            setAlert(undefined);
             
             await saveUser();
             return;

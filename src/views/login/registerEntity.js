@@ -62,7 +62,7 @@ export default function RegisterEntity() {
   const [sendObject, setSendObject] = useState({
     rut: null,
     names: null,
-    lastnames: null,
+    lastNames: null,
     communeId: null,
     entityId: null,
     login: null,
@@ -211,7 +211,7 @@ export default function RegisterEntity() {
                   fullWidth
                   id="lastNames"
                   label="Apellidos"
-                  name="lastnames"
+                  name="lastNames"
                   autoComplete="lname"
                   onChange={handleChangeInputText}
                 />

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Redirect } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import styles from "../default/defaultStyles.css";
@@ -22,7 +21,7 @@ export default function EntitiesTheme(props) {
   const [chipsProfessionals, setChipsProfessionals] = useState([]);
   const [chipsDays, setChipsDays] = useState([]);
 
-  if(!userLocalStorage) return (<Redirect to="/" />);  
+  if(!userLocalStorage) window.location.href = '/';  
 
   return (
     <AppContextEntities.Provider value={{
