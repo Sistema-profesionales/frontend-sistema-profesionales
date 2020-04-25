@@ -22,13 +22,23 @@ export default function FormSearch() {
   const [professions, setProfessions] = React.useState([]);
   const [communes, setCommunes] = React.useState([]);
   const [communeSelected, setCommuneSelected] = React.useState([]);
-  const [resultSearch, setResultSearch] = React.useState([]);
+  
 
-  const { setValuesForm, valuesForm, userLocalStorage } = useContext(AppContextEntities);
+  const { 
+    setValuesForm, 
+    valuesForm, 
+    userLocalStorage,  
+    setShowProgressBackDrop,
+    page,
+    setPage,
+    resultSearch, 
+    setResultSearch
+  } = useContext(AppContextEntities);
 
   useEffect(() => {
     async function loadData() {
       try {
+        setShowProgressBackDrop(true);
         const professions = await getProfessions();
         for (let i = 0; i < professions.length; i++) {
           professions[i]["title"] = professions[i]["name"];
@@ -50,8 +60,16 @@ export default function FormSearch() {
           communes: [communeSelected.id]
         });
 
+
+        const data = await getFindProfessionalsByFilters({ communes: [communeSelected.id] }, page);
+        setResultSearch(data);
+
+        // handleFindProfessionals();
+
       } catch (error) {
         console.log(error);
+      } finally {
+        setShowProgressBackDrop(false);
       }
     }
     loadData();
@@ -59,13 +77,22 @@ export default function FormSearch() {
   }, []);
 
   const handleFindProfessionals = async () => {
+    setPage(1);
     try {
-      const data = await getFindProfessionalsByFilters(valuesForm);
-      setResultSearch(data);
+      if(valuesForm) {
+        setShowProgressBackDrop(true);
+        const data = await getFindProfessionalsByFilters(valuesForm, 1);
+        setResultSearch(data);
+      }
+      
     } catch (error) {
       console.log(error);
+    } finally {
+      setShowProgressBackDrop(false);
     }
   }
+
+  
 
   return (
     <Paper
@@ -106,19 +133,24 @@ export default function FormSearch() {
                     ...valuesForm,
                     professions: newValue.map(e => e.id)
                   });
+
                 } else {
                   setValuesForm({
                     ...valuesForm,
                     professions: []
                   });
                 }
+                // setTimeout(async () => {
+                //   console.log(valuesForm);
+                //   await handleFindProfessionals();
+                // }, 2000);
               }}
+              onBlur={handleFindProfessionals}
               renderTags={(value, getTagProps) => {
                 const tags = value.slice(0, 1).map((option, index) => (
                   <Chip label={option.title} {...getTagProps({ index })} className={classes.tag} />
                 ));
                 const length = value.length;
-
                 return (
                   <div>
                     {tags}
@@ -159,6 +191,7 @@ export default function FormSearch() {
                   });
                 }
               }}
+              onBlur={handleFindProfessionals}
               renderTags={(value, getTagProps) => {
                 const tags = value.slice(0, 1).map((option, index) => (
                   <Chip label={option.name} {...getTagProps({ index })} className={classes.tag} />
@@ -200,7 +233,7 @@ export default function FormSearch() {
                   });
                 }
               }}
-
+              onBlur={handleFindProfessionals}
               renderTags={(value, getTagProps) => {
                 const tags = value.slice(0, 1).map((option, index) => (
                   <Chip label={option.title} {...getTagProps({ index })} className={classes.tag} />
@@ -246,6 +279,7 @@ export default function FormSearch() {
                   });
                 }
               }}
+              onBlur={handleFindProfessionals}
               renderInput={params => (
                 <TextField
                   {...params}

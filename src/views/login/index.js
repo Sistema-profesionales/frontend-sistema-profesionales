@@ -112,31 +112,23 @@ export default function Index() {
       setAlert
     }}>
       <div>
-
         <img className="fondo-capas" id="capa-uno" src={"img/background-login/capa-uno.png"} alt="capa uno" />
         <img className="fondo-capas" id="capa-dos" src={"img/background-login/capa-dos.png"} alt="capa dos" />
         <img className="fondo-capas" id="capa-tres" src={"img/background-login/capa-tres.png"} alt="capa tres" />
         <img className="fondo-capas" id="capa-cuatro" src={"img/background-login/capa-cuatro.png"} alt="capa cuatro" />
 
-
         <div className="cont-body">
           <div className="cont-login">
-
             <Container component="main" maxWidth="xl">
               <div className="container" ref={container} >
                 <div className="form-container sign-up-container">
-
                   <form style={{ boder: '3px solid red' }}>
-
                     <h1>Perfil profesional</h1>
                     <p>Registrese para definir sus días libres y aumentar sus horas laborales.</p>
                     <Link to="/register/professional"><button>Registrar</button></Link>
-
                     <div onClick={movToLeft} className="only-mov"> Empresa?</div>
                     <p onClick={frontSignIn} className="goLogin">← Ya tengo cuenta.</p>
-
                   </form>
-
                 </div>
                 <div className="form-container sign-in-container">
                   <Alert {...alert} context={AppContextLogin}></Alert>
@@ -197,8 +189,6 @@ export default function Index() {
                       <button className="ghost" id="signUp"
                         onClick={frontSignUp}
                       >Registrar</button>
-
-
                       <p onClick={movToLeft} className="only-mov">← Ya tengo cuenta. ♥</p>
                     </div>
                   </div>

@@ -1,5 +1,4 @@
-import React , { useEffect } from "react";
-// import Rating from "@material-ui/lab/Rating";
+import React , { useContext, useRef } from "react";
 import Box from "@material-ui/core/Box";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
@@ -10,8 +9,10 @@ import { List, Grid, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
+import { getFindProfessionalsByFilters } from '../../../../factory/users';
 import { daysOfWeek } from '../../../../constants/timesAndDays';
-// import ProgressSkeleton from '../../../globals/Skeleton';
+import { AppContextEntities } from '../../../../context/AppEntitiesContext';
+import ProgressBackDrop from '../../../globals/ProgressBackDrop';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,27 +58,78 @@ const useStyles = makeStyles(theme => ({
 
 export default function ListProfessionals(props) {
   const classes = useStyles();
-  //   const {
-  //     setProfessionalSelected,
-  //     setopenFullScreenModal,
-  //     valuesForm,
-  //     setRedirect
-  //   } = useContext(AppContextSearchProfessional);
+    const {
+      setPage,
+      page,
+      showProgressBackDrop,
+      setShowProgressBackDrop,
+      valuesForm,
+      resultSearch, 
+      setResultSearch
+    } = useContext(AppContextEntities);
 
   // console.log(props.data);
   const data = props.data;
 
+  const loader = React.useRef(resultSearch);
 
-  const [loading, setLoading] = React.useState(true);
+  const observer = React.useRef(
+    new IntersectionObserver(
+      entries => {
+        const first = entries[0];
+        if (first.isIntersecting) {
+          loader.current();
+        }
+      },
+      { threshold: 1 }
+    )
+  );
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 5000);
-  // }, []);
+  const [element, setElement] = React.useState(null);
+  const [more, setMore] = React.useState(false);
+  // const [element, setElement] = React.useState(null);
 
-  // if(loading) return (<ProgressSkeleton />);
+  React.useEffect(() => {
+    loader.current = resultSearch;
+  }, [resultSearch]);
 
+  React.useEffect(() => {
+    const currentElement = element;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [resultSearch]);
+
+  const loadMoreResult = async () => {
+    setPage(page + 1);
+    try {
+      const data = await getFindProfessionalsByFilters(valuesForm, page + 1);
+      if(data.length > 0) {
+        setShowProgressBackDrop(true);
+        // setMore(true);
+        setResultSearch([...resultSearch, ...data]);
+      } else {
+        // setMore(false);
+      }
+      console.log(data.length);
+      setMore(data.length === 5);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setShowProgressBackDrop(false);
+    }
+  }
+
+  // if(showProgressBackDrop) return (<ProgressBackDrop context={AppContextEntities} />);
+  console.log({ more, page });
   return (
     <React.Fragment>
       <List className={classes.root}>
@@ -146,8 +198,15 @@ export default function ListProfessionals(props) {
             <Divider variant="inset" component="li" />
           </div>
         ))}
+
+        {showProgressBackDrop && <div>Loading...</div>}
+
+        {!showProgressBackDrop && more && (
+          <div ref={setElement} style={{ background: "transparent" }}></div>
+        )} 
+
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <Button variant="outlined" color="primary" style={{ marginTop: '20px' }} disableElevation>
+          <Button onClick={loadMoreResult} variant="outlined" color="primary" style={{ marginTop: '20px' }} disableElevation>
             Cargar mas resultados
           </Button>
         </div>

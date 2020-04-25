@@ -20,6 +20,9 @@ export default function EntitiesTheme(props) {
   const [redirect, setRedirect] = useState(false);
   const [chipsProfessionals, setChipsProfessionals] = useState([]);
   const [chipsDays, setChipsDays] = useState([]);
+  const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [resultSearch, setResultSearch] = React.useState([]);
 
   if(!userLocalStorage) window.location.href = '/';  
 
@@ -37,7 +40,13 @@ export default function EntitiesTheme(props) {
       chipsProfessionals,
       setChipsProfessionals,
       chipsDays, 
-      setChipsDays
+      setChipsDays,
+      showProgressBackDrop, 
+      setShowProgressBackDrop,
+      page,
+      setPage,
+      resultSearch, 
+      setResultSearch
     }}>
       <BrowserRouter>
         <React.Fragment>

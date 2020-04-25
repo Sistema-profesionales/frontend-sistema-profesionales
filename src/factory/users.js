@@ -50,10 +50,10 @@ export async function createUserProfessional(data) {
 }
 
 
-export async function getFindProfessionalsByFilters(data) {
-  console.log(data);
+export async function getFindProfessionalsByFilters(data, page) {
+  // console.log(data);
   try {
-    const res = await fetch(`${BASE_URI_REST_API}/users/getUsersByFilters`, {
+    const res = await fetch(`${BASE_URI_REST_API}/users/getUsersByFilters?page=${page}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
