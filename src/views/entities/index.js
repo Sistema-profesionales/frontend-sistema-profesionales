@@ -1,25 +1,10 @@
-import React, { useState } from "react";
-import FormSearch from '../../components/entities/FormSearch';
-import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
+import React from "react";
+import SearchProfessionals from '../../components/themes/entities/find-professionals/SearchProfessionals';
+// import { AppContextSearchProfessional } from '../../context/AppEntitiesContext';
 
-export default function SearchProfessionals() {
-  const [valuesForm, setValuesForm] = useState(null);
-  const [openFullScreenModal, setopenFullScreenModal] = useState(false);
-  const [professionalSelected, setProfessionalSelected] = useState(undefined);
-  const [redirect, setRedirect] = useState(false);
+export default function Index() {
   
   return (
-    <AppContextSearchProfessional.Provider value={{
-      valuesForm,
-      setValuesForm,
-      openFullScreenModal, 
-      setopenFullScreenModal, 
-      professionalSelected,
-      setProfessionalSelected,
-      redirect,
-      setRedirect
-    }}>
-      <FormSearch></FormSearch>
-    </AppContextSearchProfessional.Provider>
+      <SearchProfessionals></SearchProfessionals>
   );
 }

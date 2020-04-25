@@ -60,15 +60,6 @@ export default function ListProfessionals() {
   ];
   return (
     <React.Fragment>
-      <Typography variant="h6" component="h2" style={{ padding: "20px" }}>
-        {`Profesionales disponibles para la profesión de ${
-          valuesForm && valuesForm.profession ? valuesForm.profession : ""
-        }, para la fecha  ${
-          valuesForm && valuesForm.date
-            ? new Date(valuesForm.date).toISOString().split("T")[0]
-            : ""
-        }`}
-      </Typography>
       <List className={classes.root}>
         {data.map((e, i) => (
           <div key={i}>

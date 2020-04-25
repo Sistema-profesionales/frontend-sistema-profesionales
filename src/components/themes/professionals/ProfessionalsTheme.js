@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
@@ -10,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import styles from './style.css';
 import { AppContextProfessionals } from '../../../context/AppProfessionalsContext';
+import { getUserLocalStorage } from '../../../factory/users';
 import AppBar from './AppBar';
 import Sidebar from './SideBar';
 import { BrowserRouter } from "react-router-dom";
@@ -30,16 +30,18 @@ function Copyright() {
 const useStyles = makeStyles(theme => styles(theme));
 // EXPORTAR PROFESSIONALSTHEME
 export default function Dashboard(props) {
+  const userLocalStorage = getUserLocalStorage();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  if(!userLocalStorage) window.location.href = '/';  
 
   return (
     <BrowserRouter>
       <AppContextProfessionals.Provider value={{
         open,
-        setOpen
+        setOpen,
+        userLocalStorage
       }}>
         <div className={classes.root}>
           <CssBaseline />
@@ -51,10 +53,10 @@ export default function Dashboard(props) {
 
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container} style={{ maxWidth: '100%' }}>
-              <Grid container spacing={3} style={{ maxWidth: '100%', flexBasis: 'none' }}>
+            <Container maxWidth="lg" className={classes.container} >
+              <Grid container style={{ maxWidth: '100%', flexBasis: 'none' }}>
                 <Grid item xs={12} md={12} lg={12}>
-                  <Paper className={fixedHeightPaper}>
+                  <Paper className={classes.paper}>
                     { /* AQUI VA EL CONTENIDO DINAMICO */}
                     {props.children}
                   </Paper>
