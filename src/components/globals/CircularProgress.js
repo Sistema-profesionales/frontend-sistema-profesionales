@@ -18,12 +18,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CircularProgressBar() {
+export default function CircularProgressBar(props) {
   const classes = useStyles();
+  const { isCentered, size } = props;
 
   return (
-    <div className={classes.root}>
-      <ColorCircularProgress color="primary" size={25} thickness={5} />
+    <div className={classes.root} style={ isCentered !== undefined && isCentered ? {marginLeft: '50%'} : {marginLeft: 'unset'}}>
+      <ColorCircularProgress color="primary" size={size || 25} thickness={5} />
     </div>
   );
 }

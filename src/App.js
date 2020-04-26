@@ -9,7 +9,7 @@ import { getUserLocalStorage } from './factory/users';
 
 function App() {
   let userLogged = getUserLocalStorage();
-  console.log(userLogged);
+  // console.log(userLogged);
 
   if (userLogged) {
     if (userLogged.entityId) {

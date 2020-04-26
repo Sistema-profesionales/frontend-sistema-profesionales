@@ -22,7 +22,7 @@ export default function EntitiesTheme(props) {
   const [chipsDays, setChipsDays] = useState([]);
   const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
   const [page, setPage] = React.useState(1);
-  const [resultSearch, setResultSearch] = React.useState([]);
+  const [resultSearch, setResultSearch] = React.useState(undefined);
 
   if(!userLocalStorage) window.location.href = '/';  
 

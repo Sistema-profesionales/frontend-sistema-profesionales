@@ -62,6 +62,7 @@ export default function FormSearch() {
 
 
         const data = await getFindProfessionalsByFilters({ communes: [communeSelected.id] }, page);
+        // console.log(data);
         setResultSearch(data);
 
         // handleFindProfessionals();
@@ -78,6 +79,7 @@ export default function FormSearch() {
 
   const handleFindProfessionals = async () => {
     setPage(1);
+    setResultSearch(undefined);
     try {
       if(valuesForm) {
         setShowProgressBackDrop(true);
