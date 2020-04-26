@@ -43,6 +43,7 @@ export default function FormRut() {
                 }
             }    
         } catch (error) {
+            console.log(error);
             setAlert({
                 variant: 'filled',
                 severity: 'error',
