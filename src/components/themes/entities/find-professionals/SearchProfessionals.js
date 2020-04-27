@@ -62,10 +62,7 @@ export default function FormSearch() {
 
 
         const data = await getFindProfessionalsByFilters({ communes: [communeSelected.id] }, page);
-        // console.log(data);
         setResultSearch(data);
-
-        // handleFindProfessionals();
 
       } catch (error) {
         console.log(error);
@@ -125,8 +122,7 @@ export default function FormSearch() {
               options={professions}
               disableCloseOnSelect
               loading
-              loadingText="Cargando..."
-              disablePortal
+              loadingText="Cargando..."	
               getOptionLabel={(option) => option.title}
               onChange={(event, newValue) => {
                 if (newValue.length > 0) {
@@ -153,6 +149,7 @@ export default function FormSearch() {
                   <Chip label={option.title} {...getTagProps({ index })} className={classes.tag} />
                 ));
                 const length = value.length;
+                console.log(length);
                 return (
                   <div>
                     {tags}

@@ -8,13 +8,10 @@ import Avatar from "@material-ui/core/Avatar";
 import { List, Grid, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Button from '@material-ui/core/Button';
 import { getFindProfessionalsByFilters } from '../../../../factory/users';
 import { daysOfWeek } from '../../../../constants/timesAndDays';
 import { AppContextEntities } from '../../../../context/AppEntitiesContext';
-import ProgressBackDrop from '../../../globals/ProgressBackDrop';
 import CircularProgress from '../../../globals/CircularProgress';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -71,31 +68,27 @@ export default function ListProfessionals(props) {
   } = useContext(AppContextEntities);
 
   let listRef = useRef(null);
-  // console.log(props.data);
+
   const data = props.data;
   // console.log(data);
 
-  const [more, setMore] = React.useState(false);
-
   const scrollResult = () => {
     let content = listRef.current;
-    if (content.scrollHeight - content.scrollTop === content.clientHeight && data && data.rows && data.rows.length < data.count) {
+    if (content.scrollHeight - content.scrollTop === content.clientHeight && data && data.response && data.response.length < data.countResult) {
       loadMoreResult();
     }
   }
 
   const loadMoreResult = async () => {
-    console.log("EXECUTE");
     setPage(page + 1);
     try {
       setShowProgressBackDrop(true);
       const data = await getFindProfessionalsByFilters(valuesForm, page + 1);
-      // console.log(data);
-      if (data.rows && data.rows.length > 0) {
-        setMore(true);
-        setResultSearch({ rows: [...resultSearch.rows, ...data.rows], count: resultSearch.count});
-      } else {
-        setMore(false);
+      if (data.response && data.response.length > 0) {
+        setResultSearch({
+          response: [...resultSearch.response, ...data.response],
+          countResult: resultSearch.countResult
+        });
       }
 
     } catch (error) {
@@ -105,19 +98,19 @@ export default function ListProfessionals(props) {
     }
   }
 
-  
+
   // console.log({ showProgressBackDrop, page, more, resultSearch });
   return (
     <React.Fragment>
       <List className={classes.root} id="list" ref={listRef} onScroll={scrollResult}>
-      
-        {data && data.rows && data.rows.map((e, i) => (
+
+        {data && data.response && data.response.length > 0 ? data.response.map((e, i) => (
           <div key={i}>
             <ListItem
               alignItems="flex-start"
             >
               <ListItemAvatar>
-        <Avatar>{e.names.substring(1, 2)}</Avatar>
+                <Avatar>{e.names.substring(1, 2)}</Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={<div style={{ fontWeight: 'bold' }}>{e.professions.map(e => e)}</div>}
@@ -165,7 +158,14 @@ export default function ListProfessionals(props) {
             </ListItem>
             <Divider variant="inset" component="li" />
           </div>
-        ))}
+        ))
+          : !showProgressBackDrop ? 
+          <ListItem 
+            alignItems="flex-start" 
+            style={{ justifyContent: 'center', fontSize: '21px', fontStyle: 'italic' }}>
+            No existen resultados para la busqueda realizada
+          </ListItem> : null
+        }
 
         {/* <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <Button onClick={loadMoreResult} variant="outlined" color="primary" style={{ marginTop: '20px' }} disableElevation>
@@ -173,7 +173,7 @@ export default function ListProfessionals(props) {
           </Button>
         </div> */}
       </List>
-      {showProgressBackDrop && <div id="loading" style={{ paddingTop: '10px'}}><CircularProgress isCentered={true} size={45} /></div>}
+      {showProgressBackDrop && <div id="loading" style={{ paddingTop: '10px' }}><CircularProgress isCentered={true} size={45} /></div>}
     </React.Fragment>
   );
 }

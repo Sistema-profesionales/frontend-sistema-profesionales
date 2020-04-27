@@ -11,14 +11,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ProgressBackDrop(props) {
-    const { context } = props; 
+    const { context, text } = props; 
     const classes = useStyles();
 
     const { showProgressBackDrop } = useContext(context);
     return (
         <div>
             <Backdrop className={classes.backdrop} open={showProgressBackDrop}>
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit" style={{ marginRight: '20px' }} /> { text || null } 
             </Backdrop>
         </div>
     );
