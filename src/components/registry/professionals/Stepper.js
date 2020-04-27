@@ -16,8 +16,10 @@ import StepPersonalData from './StepPersonalData';
 import StepLocationWork from './StepLocationWork';
 import { AppContextRegister } from '../../../context/AppContextRegister';
 import Alert from '../../globals/Alert';
+import ProgressBackDrop from '../../globals/ProgressBackDrop';
 import { createUserProfessional } from '../../../factory/users';
 import { useHistory } from 'react-router-dom';
+import { checkDataUser } from '../../../factory/users';
 
 const useQontoStepIconStyles = makeStyles({
     root: {
@@ -70,7 +72,7 @@ const ColorlibConnector = withStyles({
         '& $line': {
             backgroundImage:
                 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-                fontWeight: 'bold'
+            fontWeight: 'bold'
         },
     },
     completed: {
@@ -179,6 +181,7 @@ export default function CustomizedSteppers() {
     const [isUserValid, setIsUserValid] = React.useState(false);
     const [professional, setProfessional] = React.useState(undefined);
     const [success, setSuccess] = React.useState(false);
+    const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
     const [values, setValues] = React.useState({
         region: null,
         provincie: null,
@@ -186,29 +189,23 @@ export default function CustomizedSteppers() {
     });
 
     const saveUser = async () => {
-    try {
-        setAlert({
-            variant: 'filled',
-            severity: 'success',
-            message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
-            loading: true
-        });
-      let newUserProfessional = await createUserProfessional(sendObject);
-      //console.log(newUserProfessional);
-      if (newUserProfessional) {
-        setTimeout(() => {
-          history.push("/");
-        }, 3000);
-      }
-    } catch (error) {
-      console.log(error.message);
-      setAlert({
-        variant: 'filled',
-        severity: 'error',
-        message: error.message
-      });
+        try {
+            setShowProgressBackDrop(true);
+            let newUserProfessional = await createUserProfessional(sendObject);
+            if (newUserProfessional) {
+                setTimeout(() => {
+                    history.push("/");
+                    setShowProgressBackDrop(false);
+                }, 3000);
+            }
+        } catch (error) {
+            setAlert({
+                variant: 'filled',
+                severity: 'error',
+                message: error.message
+            });
+        } 
     }
-  }
 
     const handleChangeInputText = (event) => {
         let { name, value } = event.target;
@@ -216,39 +213,35 @@ export default function CustomizedSteppers() {
     }
 
     const handleNext = async () => {
-        if(activeStep === 1 && sendObject) {
-            if(!sendObject.phone || !sendObject.email || !sendObject.password || !sendObject.passwordConfirm) {
-                setAlert({
-                    variant: 'filled',
-                    severity: 'error',
-                    message: 'Todos los campos son requeridos'
-                });
-
-                return;
-            } else {
-                if(sendObject.password !== sendObject.passwordConfirm) {
+        try {
+            setAlert(undefined);
+            if (activeStep === 1 && sendObject) {
+                await checkDataUser(sendObject);
+                if (sendObject.password !== sendObject.passwordConfirm) {
                     setAlert({
                         variant: 'filled',
                         severity: 'error',
                         message: 'Las contraseñas no coinciden'
                     });
-    
                     return;
-                } 
+                }
             }
+
+            if (activeStep === 2 && sendObject) {
+                setAlert(undefined);
+                await saveUser();
+                return;
+            }
+
+            setActiveStep(prevActiveStep => prevActiveStep + 1);
+        } catch (error) {
+            setAlert({
+                variant: 'filled',
+                severity: 'error',
+                message: error.message
+            });
         }
 
-        if(activeStep === 2 && sendObject) {
-            // console.log("end step ");
-            // console.log(sendObject);
-            setAlert(undefined);
-            
-            await saveUser();
-            return;
-        }
-
-        // setAlert(undefined);
-        setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleBack = () => {
@@ -276,12 +269,13 @@ export default function CustomizedSteppers() {
             values,
             setValues,
             success,
-            setSuccess
+            setSuccess,
+            showProgressBackDrop
         }}>
-            
-            <div className={classes.root}>
-                <Alert {...alert} context={AppContextRegister}></Alert>
 
+            <div className={classes.root}>
+                {alert ? <Alert {...alert} context={AppContextRegister}></Alert> : null}
+                {showProgressBackDrop ? <ProgressBackDrop context={AppContextRegister} text={"Validando y guardando su informacion"}></ProgressBackDrop> : null}
                 <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
                     {steps.map(label => (
                         <Step key={label}>
@@ -289,42 +283,42 @@ export default function CustomizedSteppers() {
                         </Step>
                     ))}
                 </Stepper>
-                
+
                 <div>
                     {activeStep === steps.length ? (
-                    <div>
-                        <Typography className={classes.instructions}>
-                        All steps completed - you&apos;re finished
+                        <div>
+                            <Typography className={classes.instructions}>
+                                All steps completed - you&apos;re finished
                         </Typography>
-                        <Button onClick={handleReset} className={classes.button}>
-                        Reset
+                            <Button onClick={handleReset} className={classes.button}>
+                                Reset
                         </Button>
-                    </div>
-                    ) : (
-                    <div>
-                        {getStepContent(activeStep)}
-                        {
-                            !isUserValid ? null
-                            :
-                            <div style={{ padding: '35px' }}>
-                            <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                Anterior
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNext}
-                                className={classes.button}
-                            >
-                                {activeStep === steps.length - 1 ? 'Finalizado' : 'Siguiente'}
-                            </Button>
                         </div>
-                        }
-                        
-                    </div>
-                    )}
+                    ) : (
+                            <div>
+                                {getStepContent(activeStep) ? getStepContent(activeStep) : null}
+                                {
+                                    !isUserValid ? null
+                                        :
+                                        <div style={{ padding: '35px' }}>
+                                            <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                                Anterior
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={handleNext}
+                                                className={classes.button}
+                                            >
+                                                {activeStep === steps.length - 1 ? 'Finalizado' : 'Siguiente'}
+                                            </Button>
+                                        </div>
+                                }
+
+                            </div>
+                        )}
+                </div>
             </div>
-        </div>
         </AppContextRegister.Provider>
     );
 }

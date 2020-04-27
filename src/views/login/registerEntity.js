@@ -139,7 +139,6 @@ export default function RegisterEntity() {
   const saveUser = async () => {
     try {
       let newUserProfessional = await createUserProfessional(sendObject);
-      //console.log(newUserProfessional);
       if(newUserProfessional) {
         setAlert({
           variant: 'filled',

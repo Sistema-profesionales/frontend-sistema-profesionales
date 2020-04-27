@@ -81,7 +81,7 @@ export default function FormRut() {
                 const verify = await getInfoUserMinsal(rutFormat.rutQuery);
 
                 if (verify) {
-                    console.log(verify);
+                    // console.log(verify);
                     setProfessional(verify);
                     setActiveStep(1);
                     setIsUserValid(true);
