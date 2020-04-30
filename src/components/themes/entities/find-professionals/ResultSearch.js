@@ -12,6 +12,9 @@ import { getFindProfessionalsByFilters } from '../../../../factory/users';
 import { daysOfWeek } from '../../../../constants/timesAndDays';
 import { AppContextEntities } from '../../../../context/AppEntitiesContext';
 import CircularProgress from '../../../globals/CircularProgress';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import EmailIcon from '@material-ui/icons/Email';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -98,6 +101,25 @@ export default function ListProfessionals(props) {
     }
   }
 
+  const onchangePanel = (panel) => event => {
+    // console.log(panel);
+    let panelCLASS = document.getElementsByClassName("panel-open");
+    let panelDOM = document.getElementById(panel);
+
+    if (panelDOM.style.display === "block") {
+      panelDOM.style.display = "none";
+    } else {
+      panelDOM.style.display = "block";
+    }
+
+    for (let i = 0; i < panelCLASS.length; i++) {
+      if (panelCLASS[i] !== panelDOM) {
+        panelCLASS[i].style.display = "none";
+      }
+    }
+
+  }
+
 
   // console.log({ showProgressBackDrop, page, more, resultSearch });
   return (
@@ -105,9 +127,11 @@ export default function ListProfessionals(props) {
       <List className={classes.root} id="list" ref={listRef} onScroll={scrollResult}>
 
         {data && data.response && data.response.length > 0 ? data.response.map((e, i) => (
-          <div key={i}>
+          <div key={i} onClick={onchangePanel(`panel${i}`)}>
             <ListItem
               alignItems="flex-start"
+              style={{ cursor: 'pointer' }}
+
             >
               <ListItemAvatar>
                 <Avatar>{e.names.substring(1, 2)}</Avatar>
@@ -155,15 +179,30 @@ export default function ListProfessionals(props) {
                   }
                 </Grid>
               </Box>
+
             </ListItem>
+            <Grid container id={`panel${i}`} className="panel-open" style={{ display: 'none', marginTop: '15px' }}>
+              <Grid container style={{ padding: '10px' }}>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  {e.phone} <PhoneIcon />
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  Enviar un WhatsApp <WhatsAppIcon />
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  {e.email} <EmailIcon />
+                </Grid>
+              </Grid>
+
+            </Grid>
             <Divider variant="inset" component="li" />
           </div>
         ))
-          : !showProgressBackDrop ? 
-          <ListItem 
-            alignItems="flex-start" 
-            style={{ justifyContent: 'center', fontSize: '21px', fontStyle: 'italic' }}>
-            No existen resultados para la busqueda realizada
+          : !showProgressBackDrop ?
+            <ListItem
+              alignItems="flex-start"
+              style={{ justifyContent: 'center', fontSize: '21px', fontStyle: 'italic' }}>
+              No existen resultados para la busqueda realizada
           </ListItem> : null
         }
 
