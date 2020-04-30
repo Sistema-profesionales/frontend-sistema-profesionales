@@ -11,6 +11,7 @@ import { getCommunesByProvinceAndUserId } from '../../../../factory/provincies';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppContextEntities } from '../../../../context/AppEntitiesContext';
 import ResultSearch from './ResultSearch';
+// import ListProfessionals from './ListProfessionals';
 import { timeSlots, daysOfWeek } from '../../../../constants/timesAndDays';
 
 const useStyles = makeStyles(theme => styles(theme));
@@ -138,10 +139,6 @@ export default function FormSearch() {
                     professions: []
                   });
                 }
-                // setTimeout(async () => {
-                //   console.log(valuesForm);
-                //   await handleFindProfessionals();
-                // }, 2000);
               }}
               onBlur={handleFindProfessionals}
               renderTags={(value, getTagProps) => {
@@ -340,6 +337,7 @@ export default function FormSearch() {
           </Grid> */}
         </Grid>
         <ResultSearch data={resultSearch}></ResultSearch>
+        {/* <ListProfessionals data={resultSearch}></ListProfessionals> */}
       </React.Fragment>
     </Paper>
   );
