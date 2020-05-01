@@ -23,6 +23,7 @@ export default function EntitiesTheme(props) {
   const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [resultSearch, setResultSearch] = React.useState(undefined);
+  const [openWhatsApp, setOpenWhatsApp] = React.useState(false);
 
   if(!userLocalStorage) window.location.href = '/';  
 
@@ -46,7 +47,9 @@ export default function EntitiesTheme(props) {
       page,
       setPage,
       resultSearch, 
-      setResultSearch
+      setResultSearch,
+      openWhatsApp, 
+      setOpenWhatsApp
     }}>
       <BrowserRouter>
         <React.Fragment>
