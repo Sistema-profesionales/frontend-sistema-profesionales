@@ -15,6 +15,7 @@ import CircularProgress from '../../../globals/CircularProgress';
 import PhoneIcon from '@material-ui/icons/Phone';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import EmailIcon from '@material-ui/icons/Email';
+import SendWhatsApp from './SendWhatsApp';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,9 +24,19 @@ const useStyles = makeStyles(theme => ({
     maxHeight: 280,
     overflowY: 'auto'
   },
+  textExpansionPanel: {
+    width: '50%', float: 'left', textAlign: 'right', padding: '5px', fontSize: '15px', fontStyle: 'italic'
+  },
   inline: {
     display: "inline",
     marginRight: '5px'
+  },
+  listItem: {
+    '&:hover': {
+      backgroundColor: '#e4dede',
+      color: 'var(--color-hover-text)',
+      cursor: 'pointer',
+    }
   },
   dayDisponibility: {
     width: '30px',
@@ -54,12 +65,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-
-// EXPORTAR LIST PROFESSIONALS
-
 export default function ListProfessionals(props) {
   const classes = useStyles();
+
   const {
     setPage,
     page,
@@ -67,13 +75,15 @@ export default function ListProfessionals(props) {
     setShowProgressBackDrop,
     valuesForm,
     resultSearch,
-    setResultSearch
+    setResultSearch,
+    openWhatsApp, 
+    setOpenWhatsApp,
+    setProfessionalSelected,
   } = useContext(AppContextEntities);
 
   let listRef = useRef(null);
 
   const data = props.data;
-  // console.log(data);
 
   const scrollResult = () => {
     let content = listRef.current;
@@ -120,23 +130,32 @@ export default function ListProfessionals(props) {
 
   }
 
+  const sendWhatsAppProfessional = (professional) => event => {
+    setOpenWhatsApp(true);
+    setProfessionalSelected(professional)
+  }
+
 
   // console.log({ showProgressBackDrop, page, more, resultSearch });
   return (
     <React.Fragment>
+      { openWhatsApp ? <SendWhatsApp /> : null}
       <List className={classes.root} id="list" ref={listRef} onScroll={scrollResult}>
 
         {data && data.response && data.response.length > 0 ? data.response.map((e, i) => (
-          <div key={i} onClick={onchangePanel(`panel${i}`)}>
+          <div key={i}>
+            <Tooltip title="Expande para ver informacion de contacto" arrow>
             <ListItem
+              className={classes.listItem}
               alignItems="flex-start"
               style={{ cursor: 'pointer' }}
-
+              onClick={onchangePanel(`panel${i}`)}
             >
               <ListItemAvatar>
                 <Avatar>{e.names.substring(1, 2)}</Avatar>
               </ListItemAvatar>
               <ListItemText
+              
                 primary={<div style={{ fontWeight: 'bold' }}>{e.professions.map(e => e)}</div>}
                 secondary={
                   <React.Fragment>
@@ -161,8 +180,8 @@ export default function ListProfessionals(props) {
                   </React.Fragment>
                 }
               />
-              <Box component="fieldset" mb={3} borderColor="transparent">
-                <Grid container spacing={2}>
+              <Box component="fieldset" mb={3} borderColor="transparent" style={{ marginBottom: '0px' }}>
+                <Grid container spacing={2} style={{ padding: '12px' }}>
                   {
                     daysOfWeek.map((d, index) =>
                       <Grid key={`day${index}`} item className={e.disponibilities && e.disponibilities.find(x => x.dayOfWeek === d.day) ? classes.dayDisponibility : classes.dayNotDisponibility}>
@@ -181,16 +200,22 @@ export default function ListProfessionals(props) {
               </Box>
 
             </ListItem>
+            </Tooltip>
+            
             <Grid container id={`panel${i}`} className="panel-open" style={{ display: 'none', marginTop: '15px' }}>
               <Grid container style={{ padding: '10px' }}>
                 <Grid item xs={4} style={{ textAlign: 'center' }}>
-                  {e.phone} <PhoneIcon />
+                  <div className={classes.textExpansionPanel}>{e.phone}</div>
+                  <div style={{ width: '50%', float: 'right', textAlign: 'left' }}><PhoneIcon style={{ fontSize: '26px', color: 'green' }} /></div>
+
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: 'center', cursor: 'pointer' }} onClick={sendWhatsAppProfessional(e)}>
+                  <div className={classes.textExpansionPanel}>Enviar WhatsApp</div>
+                  <div style={{ width: '50%', float: 'right', textAlign: 'left' }}><WhatsAppIcon style={{ fontSize: '26px', color: 'darkgreen' }} /></div>
                 </Grid>
                 <Grid item xs={4} style={{ textAlign: 'center' }}>
-                  Enviar un WhatsApp <WhatsAppIcon />
-                </Grid>
-                <Grid item xs={4} style={{ textAlign: 'center' }}>
-                  {e.email} <EmailIcon />
+                  <div className={classes.textExpansionPanel}>{e.email}</div>
+                  <div style={{ width: '50%', float: 'right', textAlign: 'left' }}><EmailIcon style={{ fontSize: '26px', color: 'darkred' }} /></div>
                 </Grid>
               </Grid>
 
@@ -205,12 +230,6 @@ export default function ListProfessionals(props) {
               No existen resultados para la busqueda realizada
           </ListItem> : null
         }
-
-        {/* <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <Button onClick={loadMoreResult} variant="outlined" color="primary" style={{ marginTop: '20px' }} disableElevation>
-            Cargar mas resultados
-          </Button>
-        </div> */}
       </List>
       {showProgressBackDrop && <div id="loading" style={{ paddingTop: '10px' }}><CircularProgress isCentered={true} size={45} /></div>}
     </React.Fragment>
