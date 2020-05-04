@@ -70,7 +70,9 @@ export default function AddDisponibility(props) {
                     </div>
                     :
                     <div>
-                        <DeleteIcon style={{ marginTop: '34px', cursor: 'pointer' }} onClick={() => { handleClickDeleteDisponibility(element); }} />
+                        <Tooltip title="Eliminar disponibilidad">
+                            <DeleteIcon style={{ marginTop: '34px', cursor: 'pointer' }} onClick={() => { handleClickDeleteDisponibility(element, null); }} />
+                        </Tooltip>
                     </div>
                 }
             </Grid>

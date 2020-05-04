@@ -57,24 +57,6 @@ export default function ConfirmationDialogRaw() {
         });
     }, []);
 
-    //   const handleEntering = () => {
-    //     if (radioGroupRef.current != null) {
-    //       radioGroupRef.current.focus();
-    //     }
-    //   };
-
-    //   const handleCancel = () => {
-    //     onClose();
-    //   };
-
-    //   const handleOk = () => {
-    //     onClose(value);
-    //   };
-
-    //   const handleChange = (event) => {
-    //     setValue(event.target.value);
-    //   };
-
     const handleChange = (event) => {
         setCheckedDays({ ...checkedDays, [event.target.name]: event.target.checked });
 

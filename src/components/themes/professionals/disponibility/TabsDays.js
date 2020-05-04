@@ -7,7 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { getDisponibilityUser, createDisponibility, deleteDisponibilityById } from '../../../../factory/disponibility';
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import { getDisponibilityUser, createDisponibility, deleteDisponibilityById, deleteDisponibilityByUserIdAndDay } from '../../../../factory/disponibility';
 import { AppContextProfessionals } from '../../../../context/AppProfessionalsContext';
 import { AppContextDisponibility } from '../../../../context/AppContextDisponibility';
 import AddDisponibility from './AddDisponibility';
@@ -16,6 +19,7 @@ import Alert from '../../../globals/Alert';
 import Confirmation from '../../../globals/Confirmation';
 import { daysOfWeek } from '../../../../constants/timesAndDays';
 import CopyDisponibilities from './CopyDisponibilities';
+import  './style.css';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,6 +66,12 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(1),
         },
     },
+    absolute: {
+        left: theme.spacing(3),
+    },
+    tooltip: {
+        paddingRight: 0
+    }
 }));
 
 export default function TabsOfDays() {
@@ -113,7 +123,7 @@ export default function TabsOfDays() {
                 for (let i = 0; i < existsDisponibility.length; i++) {
                     elements.push(<AddDisponibility key={`dis${i}`} element={existsDisponibility[i]} handleHourStart={null} />);
                 }
-                
+
                 setDisponibilityByDay({
                     userId: userLocalStorage.id,
                     dayOfWeek: existsDisponibility[0].dayOfWeek,
@@ -150,37 +160,37 @@ export default function TabsOfDays() {
 
     const setDisponibilitiesByDay = async () => {
         let object = {};
-         for(let i = 0; i < daysOfWeek.length; i++) {
-             let disponibilities = await disponibilitiesByDay(daysOfWeek[i].id);
-             // console.log(disponibilities);
-             object[daysOfWeek[i].day] =  disponibilities?.length;
-             // array.push(object);
-         }
+        for (let i = 0; i < daysOfWeek.length; i++) {
+            let disponibilities = await disponibilitiesByDay(daysOfWeek[i].id);
+            // console.log(disponibilities);
+            object[daysOfWeek[i].day] = disponibilities?.length;
+            // array.push(object);
+        }
 
-         setDisponibilitiesUserBD(object);
+        setDisponibilitiesUserBD(object);
     }
 
     React.useEffect(() => {
-       setDisponibilitiesByDay();
-       // eslint-disable-next-line
+        setDisponibilitiesByDay();
+        // eslint-disable-next-line
     }, []);
 
     const handleClickSaveDisponibility = async (array) => {
         try {
             setShowProgressBackDrop(true);
-            if(Array.isArray(array) && array.length > 0) {
+            if (Array.isArray(array) && array.length > 0) {
                 // console.log("multiple");
                 setShowCopyDisponibilties(false);
-                for(let i = 0; i < array.length; i++) {
+                for (let i = 0; i < array.length; i++) {
                     await createDisponibility(array[i]);
                 }
             } else {
                 // console.log("solo uno");
-                await createDisponibility(sendObject);      
+                await createDisponibility(sendObject);
             }
             // console.log(create);
             setIsAddDisponibility(false);
-            getDisponibilityUserBD(value);
+            await getDisponibilityUserBD(value);
             setDisponibilitiesByDay();
         } catch (error) {
             console.log(error);
@@ -198,14 +208,21 @@ export default function TabsOfDays() {
         setShowCopyDisponibilties(true);
     }
 
-    const handleClickDeleteDisponibility = (e) => {
+    const handleClickDeleteDisponibility = (e, day) => {
         setShowConfirmation(true);
 
         const onAccept = async () => {
             try {
                 setShowConfirmation(false);
                 setShowProgressBackDrop(true);
-                await deleteDisponibilityById(e.id);
+                if (!day && e) {
+                    await deleteDisponibilityById(e.id);
+                } else {
+                    if (!e) {
+                        await deleteDisponibilityByUserIdAndDay(userLocalStorage.id, day);
+                    }
+                }
+
                 getDisponibilityUserBD(value);
                 setDisponibilitiesByDay();
             } catch (error) {
@@ -223,8 +240,8 @@ export default function TabsOfDays() {
         setConfirmation({
             onAccept,
             onCancel,
-            title: `Eliminar disponibilidad dia ${e.dayOfWeek}`,
-            message: `Estas seguro de eliminar el rango de horas entre las ${e.startHour} y ${e.endHour}`
+            title: `Eliminar disponibilidad dia ${e && !day ? e.dayOfWeek : day}`,
+            message: e ? `Estas seguro de eliminar el rango de horas entre las ${e.startHour} y ${e.endHour}` : `Estas seguro de eliminar todas las horas disponibles?`
         });
     }
 
@@ -260,7 +277,7 @@ export default function TabsOfDays() {
             handleClickDeleteDisponibility,
             showConfirmation,
             setShowConfirmation,
-            showCopyDisponibilties, 
+            showCopyDisponibilties,
             setShowCopyDisponibilties,
             disponibilitiesUserBD,
             disponibilityByDay
@@ -283,36 +300,46 @@ export default function TabsOfDays() {
                     <Grid item lg={12} style={{ padding: '15px' }}>
                         {
                             showCopyDisponibilties ?
-                            <CopyDisponibilities></CopyDisponibilities>
-                            : null
+                                <CopyDisponibilities></CopyDisponibilities>
+                                : null
                         }
-                        <ProgressBackDrop context={AppContextDisponibility}></ProgressBackDrop>                        
+                        {showProgressBackDrop ? <ProgressBackDrop context={AppContextDisponibility}></ProgressBackDrop> : null}
                         <Grid item lg={12} xs={12}>
-                        {
-                            showConfirmation ?
-                            <Confirmation {...confirmation} context={AppContextDisponibility}></Confirmation>
-                            : null
-                        }
-                            <Alert {...alert} context={AppContextDisponibility}></Alert>
+                            {
+                                showConfirmation ?
+                                    <Confirmation {...confirmation} context={AppContextDisponibility}></Confirmation>
+                                    : null
+                            }
+                            {alert ? <Alert {...alert} context={AppContextDisponibility}></Alert> : null}
                             <Grid item xs={12} sm={12} style={{ height: '40px', width: '100%', float: 'left' }}>
                                 <Typography variant="h6" display="block" style={{ textAlign: 'center' }} gutterBottom>
                                     Disponibilidad dia {days.find(x => x.id === value).day}
+                                    {
+                                        addDisponibility.length > 0 && !isAddDisponibility ?
+                                            <Tooltip className={classes.tooltip} onClick={() => { handleClickDeleteDisponibility(null, days.find(x => x.id === value).day) }} title={`Borrar disponibilidades del dia ${days.find(x => x.id === value).day}`} aria-label="delete">
+                                                <Fab color="secondary" className={classes.absolute}>
+                                                    <DeleteSweepIcon />
+                                                </Fab>
+                                            </Tooltip> 
+                                        : null
+                                    }
+
                                 </Typography>
                             </Grid>
                             {
-                                addDisponibility.map(e => (e))
+                                addDisponibility.length > 0 && addDisponibility.map(e => (e))
                             }
 
                             <div className={classes.buttonAddDisponibility}>
                                 {
-                                    !isAddDisponibility && 
+                                    !isAddDisponibility &&
                                     <Button color="primary" onClick={() => {
-                                        setIsAddDisponibility(true); 
-                                        setAddDisponibility([...addDisponibility, <AddDisponibility key={addDisponibility.length} element={undefined} />]) 
+                                        setIsAddDisponibility(true);
+                                        setAddDisponibility([...addDisponibility, <AddDisponibility key={addDisponibility.length} element={undefined} />])
                                     }}>Agregar Disponibilidad</Button>
                                 }
                                 {
-                                    !isAddDisponibility && addDisponibility.length > 0 && 
+                                    !isAddDisponibility && addDisponibility.length > 0 &&
                                     // disponibilitiesUserBD?.find(x => x === 0) &&
                                     <Button color="primary" onClick={handleCopyDisponibilities}>Repetir disponibilidad</Button>
 
