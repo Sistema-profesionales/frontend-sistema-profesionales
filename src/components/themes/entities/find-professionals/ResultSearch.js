@@ -16,12 +16,13 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import EmailIcon from '@material-ui/icons/Email';
 import SendWhatsApp from './SendWhatsApp';
+import './style.css';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
-    maxHeight: 280,
+    maxHeight: 300,
     overflowY: 'auto'
   },
   textExpansionPanel: {
@@ -144,7 +145,7 @@ export default function ListProfessionals(props) {
 
         {data && data.response && data.response.length > 0 ? data.response.map((e, i) => (
           <div key={i}>
-            <Tooltip title="Expande para ver informacion de contacto" arrow>
+            {/* <Tooltip title="Expande para ver informacion de contacto" arrow> */}
             <ListItem
               className={classes.listItem}
               alignItems="flex-start"
@@ -200,7 +201,7 @@ export default function ListProfessionals(props) {
               </Box>
 
             </ListItem>
-            </Tooltip>
+            {/* </Tooltip> */}
             
             <Grid container id={`panel${i}`} className="panel-open" style={{ display: 'none', marginTop: '15px' }}>
               <Grid container style={{ padding: '10px' }}>

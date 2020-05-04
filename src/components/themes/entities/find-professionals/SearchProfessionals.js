@@ -99,7 +99,7 @@ export default function FormSearch() {
       className={classes.paper}
       style={{
         paddingTop: "25px",
-        paddingBottom: "100px",
+        marginBottom: "0px !important",
         background: "#FAFAFA",
         boxShadow: "none",
         marginTop: '0px',
