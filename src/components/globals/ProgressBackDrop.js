@@ -14,9 +14,17 @@ export default function ProgressBackDrop(props) {
     const { context, text } = props; 
     const classes = useStyles();
 
+    // useEffect(() => {
+    //     document.getElementById("root").style.filter = 'blur(2px)';
+    
+    //     return () => {
+    //       document.getElementById("root").style.filter = 'none';
+    //     };
+    // }, []);
+
     const { showProgressBackDrop } = useContext(context);
     return (
-        <div>
+        <div id="bkdrop">
             <Backdrop className={classes.backdrop} open={showProgressBackDrop}>
                 <CircularProgress color="inherit" style={{ marginRight: '20px' }} /> { text || null } 
             </Backdrop>
