@@ -22,9 +22,17 @@ export default function CircularProgressBar(props) {
   const classes = useStyles();
   const { isCentered, size } = props;
 
+  // useEffect(() => {
+  //   document.getElementById("root").style.filter = 'blur(2px)';
+
+  //   return () => {
+  //     document.getElementById("root").style.filter = 'none';
+  //   };
+  // }, []);
+
   return (
-    <div className={classes.root} style={ isCentered !== undefined && isCentered ? {marginLeft: '50%'} : {marginLeft: 'unset'}}>
-      <ColorCircularProgress color="primary" size={size || 25} thickness={5} />
+    <div className={classes.root} style={isCentered !== undefined && isCentered ? { marginLeft: '50%' } : { marginLeft: 'unset' }}>
+      <ColorCircularProgress className="loadingCircle" color="primary" size={size || 25} thickness={5} />
     </div>
   );
 }

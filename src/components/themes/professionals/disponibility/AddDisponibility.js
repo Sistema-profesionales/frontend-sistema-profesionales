@@ -23,10 +23,6 @@ export default function AddDisponibility(props) {
 
     let value = addDisponibility.length;
 
-    // console.log(value);
-
-    // if(isAddDisponibility) return null;
-
     return (
         <Grid container key={`frag-${value}`} spacing={3}>
             <Grid key={`1grid-${value}`} item xs={12} sm={5} style={{ float: 'left' }}>

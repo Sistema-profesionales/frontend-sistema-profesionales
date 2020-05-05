@@ -92,8 +92,6 @@ export default function FormSearch() {
     }
   }
 
-  
-
   return (
     <Paper
       className={classes.paper}

@@ -42,7 +42,6 @@ export default function ConfirmationDialogRaw() {
     } = useContext(AppContextDisponibility);
 
     let options = daysOfWeek.filter(x => disponibilitiesUserBD && disponibilitiesUserBD[x.day] === 0);
-    // console.log(showCopyDisponibilties);
 
     React.useEffect(() => {
         //   console.log("MOUNTED");
@@ -55,6 +54,12 @@ export default function ConfirmationDialogRaw() {
             "Sabado": false,
             "Domingo": false,
         });
+
+        document.getElementById("root").style.filter = 'blur(2px)';
+    
+        return () => {
+          document.getElementById("root").style.filter = 'none';
+        };
     }, []);
 
     const handleChange = (event) => {
@@ -82,7 +87,6 @@ export default function ConfirmationDialogRaw() {
                 ...copy.filter(x => x.dayOfWeek !== event.target.name),
             ])
         }
-        // console.log(disponibilityByDay);
     };
 
     const saveMultipleDisponibilities = async () => {
@@ -90,7 +94,6 @@ export default function ConfirmationDialogRaw() {
     }
 
     if (options.length === 0) return null;
-
 
     return (
         <Dialog
@@ -117,9 +120,13 @@ export default function ConfirmationDialogRaw() {
                 </FormGroup>
             </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={saveMultipleDisponibilities} color="primary">
+                {
+                    copy.length > 0 &&
+                    <Button autoFocus onClick={saveMultipleDisponibilities} color="primary">
                     REPETIR
                 </Button>
+                }
+                
                 <Button onClick={() => { setShowCopyDisponibilties(false); }} color="primary">
                     CANCELAR
                 </Button>

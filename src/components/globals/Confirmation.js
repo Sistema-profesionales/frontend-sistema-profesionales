@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,11 +6,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
+// import './style.css';
 
 export default function Confirmation(props) {
-    const { context, title, onCancel, onAccept, message } = props;
+  const { context, title, onCancel, onAccept, message } = props;
 
   const { showConfirmation } = useContext(context);
+
+  useEffect(() => {
+    document.getElementById("root").style.filter = 'blur(2px)';
+
+    return () => {
+      document.getElementById("root").style.filter = 'none';
+    };
+  }, []);
 
   return (
     <div style={{ width: '80%' }}>
@@ -20,7 +29,7 @@ export default function Confirmation(props) {
         fullWidth
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        
+
       >
         <DialogTitle id="alert-dialog-title">{title || ''}</DialogTitle>
         <DialogContent>
@@ -29,9 +38,9 @@ export default function Confirmation(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button 
+          <Button
             onClick={onAccept} variant="contained"
-            color="secondary" 
+            color="secondary"
             startIcon={<DeleteIcon />}>
             Si, eliminar
           </Button>
