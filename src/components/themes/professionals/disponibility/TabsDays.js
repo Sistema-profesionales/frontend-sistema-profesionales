@@ -177,6 +177,15 @@ export default function TabsOfDays() {
 
     const handleClickSaveDisponibility = async (array) => {
         try {
+
+            if(!sendObject.startHour || !sendObject.endHour) {
+                setAlert({
+                    severity: 'error',
+                    message: `Por favor indica las horas de incio y termino`
+                });
+                return;
+            }
+
             setShowProgressBackDrop(true);
             if (Array.isArray(array) && array.length > 0) {
                 // console.log("multiple");
@@ -193,7 +202,10 @@ export default function TabsOfDays() {
             await getDisponibilityUserBD(value);
             setDisponibilitiesByDay();
         } catch (error) {
-            console.log(error);
+            setAlert({
+                severity: 'error',
+                message: error.message
+            });
         } finally {
             setSendObject({
                 ...sendObject,
@@ -235,6 +247,7 @@ export default function TabsOfDays() {
 
         const onCancel = () => {
             setShowConfirmation(false);
+            
         }
 
         setConfirmation({
