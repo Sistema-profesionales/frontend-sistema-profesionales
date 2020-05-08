@@ -12,6 +12,7 @@ import { timeSlots } from '../../../../constants/timesAndDays';
 export default function AddDisponibility(props) {
     let { element } = props;
     const {
+        setAlert,
         sendObject,
         setSendObject,
         handleClickSaveDisponibility,
@@ -61,7 +62,7 @@ export default function AddDisponibility(props) {
                             <SaveIcon onClick={handleClickSaveDisponibility} style={{ marginTop: '34px', cursor: 'pointer', marginRight: '10px' }} />
                         </Tooltip>
                         <Tooltip title="Cancelar">
-                            <CloseIcon style={{ marginTop: '34px', cursor: 'pointer' }} onClick={() => { setAddDisponibility([...addDisponibility.slice(0, addDisponibility.length - 1)]); setIsAddDisponibility(false); }} />
+                            <CloseIcon style={{ marginTop: '34px', cursor: 'pointer' }} onClick={() => { setAddDisponibility([...addDisponibility.slice(0, addDisponibility.length - 1)]); setIsAddDisponibility(false); setAlert(undefined); }} />
                         </Tooltip>
                     </div>
                     :
