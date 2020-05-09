@@ -83,7 +83,7 @@ export default function Index() {
         } else {
           setTimeout(() => {
             setRedirect({
-              path: "/user/professional"
+              path: "/user/professional/profile"
             });
 
             setAlert(undefined);

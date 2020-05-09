@@ -12,7 +12,7 @@ export default () => (
     <Switch>
       <Route exact path="/" component={Login} />
       <Route exact path="/user/entity" component={() => (<EntitiesTheme><RoutesEntity></RoutesEntity></EntitiesTheme>)} />
-      <Route exact path="/user/professional" component={() => (<ProfessionalsTheme><RoutesProfessionals></RoutesProfessionals></ProfessionalsTheme>)} />
+      <Route exact path="/user/professional/profile" component={() => (<ProfessionalsTheme><RoutesProfessionals></RoutesProfessionals></ProfessionalsTheme>)} />
       <Route exact path="/register/entity" component={RegisterEntity} />
       <Route exact path="/register/professional" component={RegisterProfessional} />
     </Switch>
