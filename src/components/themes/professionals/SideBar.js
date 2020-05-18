@@ -65,18 +65,6 @@ export default function Sidebar() {
             <ListItemText primary="Salir" />
           </ListItem>
         </Link>
-        {/* <ListItem button>
-          <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Reports" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <LayersIcon />
-          </ListItemIcon>
-          <ListItemText primary="Integrations" />
-        </ListItem> */}
       </List>
     </Drawer>
   );

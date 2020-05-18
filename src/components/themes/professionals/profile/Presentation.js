@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-// import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getUserById } from '../../../../factory/users';
 import { AppContextProfessionals } from '../../../../context/AppProfessionalsContext';
+import ProgressBackDrop from '../../../globals/ProgressBackDrop';
+import Documents from './Documents';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,17 +30,24 @@ const useStyles = makeStyles((theme) => ({
 export default function Presentation() {
   const classes = useStyles();
 
-  const { userLocalStorage } = useContext(AppContextProfessionals);
-  const [user, setUser] = React.useState(undefined);
+  const { 
+    userLocalStorage, 
+    showProgressBackDrop, 
+    setShowProgressBackDrop  
+  } = useContext(AppContextProfessionals);
 
+  const [user, setUser] = React.useState(undefined);
 
   React.useEffect(() => {
     async function loadData() {
       try {
+        setShowProgressBackDrop(true);
         const user = await getUserById(userLocalStorage.id);
         setUser(user);
       } catch (error) {
         console.log(error);
+      } finally {
+        setShowProgressBackDrop(false);
       }
     }
 
@@ -47,13 +55,12 @@ export default function Presentation() {
     // eslint-disable-next-line
   }, []);
 
-  console.log(user);
+  if(showProgressBackDrop) return (<ProgressBackDrop context={AppContextProfessionals}></ProgressBackDrop>);
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} style={{ background: "url('/img/globals/banner-medical.jpg')50%/cover", height: '150px' }}>
-          {/* <img src="/img/globals/user-icon.png" /> */}
           <AccountCircleIcon style={{ fontSize: '170px', color: 'lightgrey', position: 'static', marginTop: '24px', background: 'white', borderRadius: '50%' }} />
         </Grid>
         <Grid item xs={6} style={{ marginTop: '47px' }}>
@@ -91,6 +98,8 @@ export default function Presentation() {
           </Tooltip>
         </Grid>
       </Grid>
+
+      <Documents />
     </div>
   );
 }
