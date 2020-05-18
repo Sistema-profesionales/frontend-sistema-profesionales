@@ -33,6 +33,10 @@ export default function Dashboard(props) {
   const userLocalStorage = getUserLocalStorage();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [alert, setAlert] = React.useState(undefined);
+  const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [confirmation, setConfirmation] = React.useState(undefined);
 
   if(!userLocalStorage) window.location.href = '/';  
 
@@ -41,7 +45,15 @@ export default function Dashboard(props) {
       <AppContextProfessionals.Provider value={{
         open,
         setOpen,
-        userLocalStorage
+        userLocalStorage,
+        alert, 
+        setAlert,
+        showProgressBackDrop, 
+        setShowProgressBackDrop,
+        confirmation, 
+        setConfirmation,
+        showConfirmation, 
+        setShowConfirmation
       }}>
         <div className={classes.root}>
           <CssBaseline />

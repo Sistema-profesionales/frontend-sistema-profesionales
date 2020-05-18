@@ -80,6 +80,21 @@ export default function styles (theme) {
         },
         icons:{
           fontSize: '35px'
-        }
+        },
+        // itemMenu: {
+        //   '&:focus': {
+        //     backgroundColor: theme.palette.primary.main,
+        //     '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        //       color: theme.palette.common.white,
+        //     },
+        //   },
+        // },
+        // itemMenu: {
+        //   '&:active': {
+        //     backgroundColor: '#e4dede',
+        //     color: 'var(--color-hover-text)',
+        //     cursor: 'pointer',
+        //   }
+        // }
       };
 }
