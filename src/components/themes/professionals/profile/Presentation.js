@@ -6,9 +6,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getUserById } from '../../../../factory/users';
+import { getProvinciesByRegion } from '../../../../factory/regions';
+import { getCommunesByProvince } from '../../../../factory/provincies';
 import { AppContextProfessionals } from '../../../../context/AppProfessionalsContext';
 import ProgressBackDrop from '../../../globals/ProgressBackDrop';
 import Documents from './Documents';
+import ModalEdit from './edit/ModalEdit';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,20 +32,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Presentation() {
   const classes = useStyles();
-
-  const { 
-    userLocalStorage, 
-    showProgressBackDrop, 
-    setShowProgressBackDrop  
+  const {
+    userLocalStorage,
+    showProgressBackDrop,
+    setShowProgressBackDrop,
+    openModalEdit,
+    setOpenModalEdit,
+    user,
+    setUser
   } = useContext(AppContextProfessionals);
 
-  const [user, setUser] = React.useState(undefined);
+  // const [user, setUser] = React.useState(undefined);
 
   React.useEffect(() => {
     async function loadData() {
       try {
         setShowProgressBackDrop(true);
         const user = await getUserById(userLocalStorage.id);
+
+        let provincies = await getProvinciesByRegion(user.regionId);
+        for (let i = 0; i < provincies.length; i++) {
+          provincies[i]["title"] = provincies[i].name;
+        }
+
+        user["provincies"] = provincies;
+
+        let communes = await getCommunesByProvince(user.provinceId);
+        for (let i = 0; i < communes.length; i++) {
+          communes[i]["title"] = communes[i].name;
+        }
+
+        let findProvince = provincies.find(x => x.id === user.provinceId);
+        let findCommune = communes.find(x => x.id === user.communeId);
+
+        user["communes"] = communes;
+        user["findProvince"] = findProvince;
+        user["findCommune"] = findCommune;
+
         setUser(user);
       } catch (error) {
         console.log(error);
@@ -50,15 +76,16 @@ export default function Presentation() {
         setShowProgressBackDrop(false);
       }
     }
-
     loadData();
     // eslint-disable-next-line
   }, []);
 
-  if(showProgressBackDrop) return (<ProgressBackDrop context={AppContextProfessionals}></ProgressBackDrop>);
+  if (showProgressBackDrop) return (<ProgressBackDrop context={AppContextProfessionals}></ProgressBackDrop>);
 
+  console.log(user);
   return (
     <div className={classes.root}>
+      {openModalEdit && user ? <ModalEdit user={user} /> : null}
       <Grid container spacing={3}>
         <Grid item xs={12} style={{ background: "url('/img/globals/banner-medical.jpg')50%/cover", height: '150px' }}>
           <AccountCircleIcon style={{ fontSize: '170px', color: 'lightgrey', position: 'static', marginTop: '24px', background: 'white', borderRadius: '50%' }} />
@@ -92,7 +119,7 @@ export default function Presentation() {
 
         <Grid item xs={12} md={2} lg={2} style={{ fontSize: '1.2rem', lineHeight: '1.33333', fontWeight: 'bold', marginTop: '47px' }}>
           <Tooltip className={classes.tooltip} aria-label="edit" title="Editar mi informacion">
-            <Fab color="primary" className={classes.absolute}>
+            <Fab onClick={() => { setOpenModalEdit(true) }} color="primary" className={classes.absolute}>
               <EditIcon />
             </Fab>
           </Tooltip>

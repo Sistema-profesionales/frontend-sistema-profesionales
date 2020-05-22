@@ -8,7 +8,6 @@ import { AppContextProfessionals } from '../../../context/AppProfessionalsContex
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import FolderIcon from '@material-ui/icons/Folder';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -39,14 +38,6 @@ export default function Sidebar() {
               <AccountCircleIcon className={classes.icons} />
             </ListItemIcon>
             <ListItemText primary="Mi perfil" />
-          </ListItem>
-        </Link>
-        <Link to="/user/professional/documents" style={{ textDecoration: 'none', color: '#212121' }}>
-          <ListItem button>
-            <ListItemIcon>
-              <FolderIcon className={classes.icons} />
-            </ListItemIcon>
-            <ListItemText primary="Mis documentos" />
           </ListItem>
         </Link>
         <Link to="/user/professional/disponibilities" style={{ textDecoration: 'none', color: '#212121' }}>

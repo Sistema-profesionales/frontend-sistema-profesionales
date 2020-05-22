@@ -28,15 +28,22 @@ function Copyright() {
 }
 
 const useStyles = makeStyles(theme => styles(theme));
-// EXPORTAR PROFESSIONALSTHEME
+
 export default function Dashboard(props) {
   const userLocalStorage = getUserLocalStorage();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [openModalEdit, setOpenModalEdit] = React.useState(false);
   const [alert, setAlert] = React.useState(undefined);
   const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [confirmation, setConfirmation] = React.useState(undefined);
+  const [user, setUser] = React.useState(undefined);
+  const [sendObject, setSendObject] = React.useState({
+    communeId: null,
+    phone: null,
+    email: null,
+  });
 
   if(!userLocalStorage) window.location.href = '/';  
 
@@ -53,7 +60,13 @@ export default function Dashboard(props) {
         confirmation, 
         setConfirmation,
         showConfirmation, 
-        setShowConfirmation
+        setShowConfirmation,
+        openModalEdit, 
+        setOpenModalEdit,
+        sendObject, 
+        setSendObject,
+        user, 
+        setUser
       }}>
         <div className={classes.root}>
           <CssBaseline />
