@@ -18,10 +18,12 @@ export default function Location(props) {
         entity: null
     });
 
-    const { sendObject, setSendObject, user } = useContext(context);
+    const { sendObject, setSendObject, user, setUser } = useContext(context);
 
     useEffect(() => {
+        
         async function regions() {
+            console.log(user);
             try {
                 let regions = await getRegions();
 
@@ -39,7 +41,9 @@ export default function Location(props) {
                     setCommunes(communes);
 
                     let findRegion = regions.find(x => x.id === user.regionId);
-                    setValues({ ...values,  region: findRegion, provincie: user.findProvince, commune: user.findCommune });
+                    let findProvince = provincies.find(x => x.id === user.provinceId);
+                    let findCommune = communes.find(x => x.id === user.communeId);
+                    setValues({ ...values,  region: findRegion, provincie: findProvince, commune: findCommune });
                 }
             } catch (error) {
                 console.log(error);
@@ -80,14 +84,19 @@ export default function Location(props) {
         <React.Fragment>
             <Grid item xs={12} sm={6}>
                 <Autocomplete
-                    id="fixed-tags-demo"
+                    id="tag-regions"
                     options={regions}
                     getOptionLabel={option => option.title}
                     value={values.region}
                     onChange={async (event, newValue) => {
+                        setProvincies([]);
+                        setCommunes([]);
                         setValues({ ...values, region: newValue, provincie: null, commune: null });
                         if (newValue) {
                             let provincies = await getProvincesRegion(newValue.id);
+                            if(user) {
+                                setUser({ ...user, provincies, regionId: newValue.id, regionName: newValue.name });
+                            }
                             setProvincies(provincies)
                         }
                         else setProvincies([]);
@@ -106,15 +115,19 @@ export default function Location(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Autocomplete
-                    id="fixed-tags-demo"
+                    id="tag-provinces"
                     options={provincies}
                     getOptionLabel={option => option.title}
                     value={values.provincie}
                     onChange={async (event, newValue) => {
+                        setCommunes([]);
                         setValues({ ...values, provincie: newValue, commune: null });
                         if (newValue) {
-                            let communes = await getCommunesProvince(newValue.id);;
-                            setCommunes(communes)
+                            let communes = await getCommunesProvince(newValue.id);
+                            if(user) {
+                                setUser({ ...user, communes, provinceName: newValue.name, provinceId: newValue.id });
+                            }
+                            setCommunes(communes);
                         }
                     }}
                     style={{ width: '100%' }}
@@ -131,13 +144,18 @@ export default function Location(props) {
             </Grid>
             <Grid item xs={12}>
                 <Autocomplete
-                    id="fixed-tags-demo"
+                    id="tag-communes"
                     options={communes}
                     getOptionLabel={option => option.title}
                     value={values.commune}
                     onChange={(event, newValue) => {
                         setValues({ ...values, commune: newValue });
-                        if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
+                        if (newValue) {
+                            if(user) {
+                                setUser({ ...user, communeId: newValue.id, communeName: newValue.name });
+                            }
+                            setSendObject({ ...sendObject, communeId: newValue.id });
+                        }
                     }}
                     noOptionsText={false}
                     style={{ width: '100%' }}

@@ -86,6 +86,7 @@ export default function TabsOfDays() {
     const [isAddDisponibility, setIsAddDisponibility] = React.useState(false);
     const [saveDisponibility, setSaveDisponibility] = React.useState(false);
     const [showCopyDisponibilties, setShowCopyDisponibilties] = React.useState(false);
+    const [repeat, setRepeat] = React.useState(false);
 
     const {
         userLocalStorage,
@@ -183,6 +184,7 @@ export default function TabsOfDays() {
         let object = {};
         for (let i = 0; i < daysOfWeek.length; i++) {
             let disponibilities = await disponibilitiesByDay(daysOfWeek[i].id);
+            if(disponibilities.length === 0) setRepeat(true);
             object[daysOfWeek[i].day] = disponibilities?.length;
         }
 
@@ -215,9 +217,11 @@ export default function TabsOfDays() {
                 let objectModify = {};
                 for (let l = 0; l < arraySaved.length; l++) {
                     let disponibilitiesDay = await disponibilitiesByDay(arraySaved[l].id);
+                    if(disponibilitiesDay.length === 0) setRepeat(true);
+                    else setRepeat(false);
                     objectModify[arraySaved[l].day] = disponibilitiesDay.length;
-
                 }
+
                 setDisponibilitiesUserBD({ ...disponibilitiesUserBD, ...objectModify });
             } else {
                 if (!sendObject.startHour || !sendObject.endHour) {
@@ -232,6 +236,9 @@ export default function TabsOfDays() {
                 await createDisponibility(sendObject);
 
                 let disponibilitiesDay = await disponibilitiesByDay(value);
+
+                if(disponibilitiesDay.length === 0) setRepeat(true);
+                else setRepeat(false);
 
                 setDisponibilitiesUserBD({ ...disponibilitiesUserBD, [object?.dayOfWeek]: disponibilitiesDay?.length });
             }
@@ -282,6 +289,8 @@ export default function TabsOfDays() {
                 await getDisponibilityUserBD(value);
                 let disponibilitiesDay = await disponibilitiesByDay(value);
 
+                if(disponibilitiesDay.length === 0) setRepeat(true);
+
                 setDisponibilitiesUserBD({
                     ...disponibilitiesUserBD,
                     [object?.dayOfWeek]: disponibilitiesDay?.length
@@ -320,7 +329,7 @@ export default function TabsOfDays() {
         getDisponibilityUserBD(newValue);
     };
 
-    // console.log(disponibilitiesUserBD);
+    console.log(disponibilitiesUserBD);
 
     return (
         <AppContextDisponibility.Provider value={{
@@ -417,7 +426,8 @@ export default function TabsOfDays() {
                                     }}>Agregar Disponibilidad</Button>
                                 }
                                 {
-                                    !isAddDisponibility && addDisponibility.length > 0 &&
+                                    !isAddDisponibility && addDisponibility.length > 0 && 
+                                    repeat &&
                                     // disponibilitiesUserBD?.find(x => x === 0) &&
                                     <Button color="primary" onClick={handleCopyDisponibilities}>Repetir disponibilidad</Button>
 
