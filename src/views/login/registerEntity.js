@@ -16,6 +16,7 @@ import { getAllEntities } from '../../factory/entities';
 import { AppContextRegister } from '../../context/AppContextRegister';
 import Alert from '../../components/globals/Alert';
 import Location from '../../components/globals/Location';
+import ProgressBackDrop from '../../components/globals/ProgressBackDrop';
 import './register.css';
 import { useHistory } from 'react-router-dom';
 
@@ -42,6 +43,7 @@ const useStyles = makeStyles(theme => ({
 export default function RegisterEntity() {
   let history = useHistory();
   const classes = useStyles();
+  const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
   const [entities, setEntities] = useState([]);
   const [values, setValues] = useState({
     area: null,
@@ -98,22 +100,18 @@ export default function RegisterEntity() {
   }
 
   const saveUser = async () => {
+    setShowProgressBackDrop(true);
     try {
       let newUserProfessional = await createUserProfessional(sendObject);
       if(newUserProfessional) {
-        setAlert({
-          variant: 'filled',
-          severity: 'success',
-          message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
-          loading: true
-        });
-
         setTimeout(() => {
           history.push("/");
+          setShowProgressBackDrop(false);
         }, 3000);
       }
     } catch (error) {
       // console.log(error.message);
+      setShowProgressBackDrop(false);
       setAlert({
         variant: 'filled',
         severity: 'error',
@@ -127,7 +125,9 @@ export default function RegisterEntity() {
       alert,
       setAlert,
       sendObject, 
-      setSendObject
+      setSendObject,
+      setShowProgressBackDrop,
+      showProgressBackDrop
     }}>
       <Container component="main" maxWidth="md">
         <CssBaseline />
@@ -139,7 +139,8 @@ export default function RegisterEntity() {
             Regístrese como empresa
         </Typography>
           <form className={classes.form} style={{ paddingTop: '30px' }} noValidate>
-          <Alert {...alert} context={AppContextRegister}></Alert>
+          {showProgressBackDrop ? <ProgressBackDrop context={AppContextRegister} text={"Validando y guardando su informacion"}></ProgressBackDrop> : null}
+          {alert && <Alert {...alert} context={AppContextRegister}></Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
