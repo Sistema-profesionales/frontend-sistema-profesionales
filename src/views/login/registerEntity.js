@@ -11,12 +11,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getRegions, getProvinciesByRegion } from '../../factory/regions';
-import { getCommunesByProvince } from '../../factory/provincies';
 import { createUserProfessional } from '../../factory/users';
 import { getAllEntities } from '../../factory/entities';
 import { AppContextRegister } from '../../context/AppContextRegister';
 import Alert from '../../components/globals/Alert';
+import Location from '../../components/globals/Location';
+import ProgressBackDrop from '../../components/globals/ProgressBackDrop';
 import './register.css';
 import { useHistory } from 'react-router-dom';
 
@@ -43,10 +43,8 @@ const useStyles = makeStyles(theme => ({
 export default function RegisterEntity() {
   let history = useHistory();
   const classes = useStyles();
+  const [showProgressBackDrop, setShowProgressBackDrop] = React.useState(false);
   const [entities, setEntities] = useState([]);
-  const [regions, setRegions] = useState([]);
-  const [provincies, setProvincies] = useState([]);
-  const [communes, setCommunes] = useState([]);
   const [values, setValues] = useState({
     area: null,
     profession: null,
@@ -79,14 +77,6 @@ export default function RegisterEntity() {
   useEffect(() => {
     async function regions() {
       try {
-        let regions = await getRegions();
-
-        for (let i = 0; i < regions.length; i++) {
-          regions[i]["title"] = regions[i].name;
-        }
-
-        setRegions(regions);
-
         await getEntities();
       } catch (error) {
         console.log(error);
@@ -109,50 +99,19 @@ export default function RegisterEntity() {
     }
   }
 
-  const getProvincesRegion = async (regionId) => {
-    try {
-      let provincies = await getProvinciesByRegion(regionId);
-      for (let i = 0; i < provincies.length; i++) {
-        provincies[i]["title"] = provincies[i].name;
-      }
-
-      setProvincies(provincies);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  const getCommunesProvince = async (provinceId) => {
-    try {
-      let communes = await getCommunesByProvince(provinceId);
-      for (let i = 0; i < communes.length; i++) {
-        communes[i]["title"] = communes[i].name;
-      }
-
-      setCommunes(communes);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const saveUser = async () => {
+    setShowProgressBackDrop(true);
     try {
       let newUserProfessional = await createUserProfessional(sendObject);
       if(newUserProfessional) {
-        setAlert({
-          variant: 'filled',
-          severity: 'success',
-          message: "Te has registrado con éxito, serás redirigido para iniciar sesión",
-          loading: true
-        });
-
         setTimeout(() => {
           history.push("/");
+          setShowProgressBackDrop(false);
         }, 3000);
       }
     } catch (error) {
       // console.log(error.message);
+      setShowProgressBackDrop(false);
       setAlert({
         variant: 'filled',
         severity: 'error',
@@ -164,7 +123,11 @@ export default function RegisterEntity() {
   return (
     <AppContextRegister.Provider value={{
       alert,
-      setAlert
+      setAlert,
+      sendObject, 
+      setSendObject,
+      setShowProgressBackDrop,
+      showProgressBackDrop
     }}>
       <Container component="main" maxWidth="md">
         <CssBaseline />
@@ -176,7 +139,8 @@ export default function RegisterEntity() {
             Regístrese como empresa
         </Typography>
           <form className={classes.form} style={{ paddingTop: '30px' }} noValidate>
-          <Alert {...alert} context={AppContextRegister}></Alert>
+          {showProgressBackDrop ? <ProgressBackDrop context={AppContextRegister} text={"Validando y guardando su informacion"}></ProgressBackDrop> : null}
+          {alert && <Alert {...alert} context={AppContextRegister}></Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
@@ -264,75 +228,9 @@ export default function RegisterEntity() {
                   onChange={handleChangeInputText}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  id="fixed-tags-demo"
-                  options={regions}
-                  getOptionLabel={option => option.title}
-                  value={values.region}
-                  onChange={(event, newValue) => {
-                    setValues({ ...values, region: newValue });
-                    if (newValue) getProvincesRegion(newValue.id);
-                    else setProvincies([]);
-                  }}
-                  style={{ width: '100%' }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label="Región"
-                      variant="outlined"
-                      placeholder="Buscar"
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  id="fixed-tags-demo"
-                  options={provincies}
-                  getOptionLabel={option => option.title}
-                  value={values.provincie}
-                  onChange={(event, newValue) => {
-                    setValues({ ...values, provincie: newValue });
-                    if (newValue) getCommunesProvince(newValue.id);
-                  }}
-                  style={{ width: '100%' }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label="Provincia"
-                      variant="outlined"
-                      placeholder="Buscar"
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  id="fixed-tags-demo"
-                  options={communes}
-                  getOptionLabel={option => option.title}
-                  value={values.commune}
-                  onChange={(event, newValue) => {
-                    setValues({ ...values, commune: newValue });
-                    if (newValue) setSendObject({ ...sendObject, communeId: newValue.id });
-                  }}
-                  noOptionsText={false}
-                  style={{ width: '100%' }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label="Comuna"
-                      variant="outlined"
-                      placeholder="Buscar"
-                      fullWidth
-                    />
-                  )}
-                />
-              </Grid>
 
+              <Location context={AppContextRegister} />
+              
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   // disabled={values.commune ? false : true}
