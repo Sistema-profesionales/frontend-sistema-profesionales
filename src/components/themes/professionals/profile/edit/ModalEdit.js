@@ -8,6 +8,7 @@ import { TextField, Grid } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { AppContextProfessionals } from '../../../../../context/AppProfessionalsContext';
 import Location from '../../../../globals/Location';
+import Alert from '../../../../globals/Alert';
 import CircularProgress from '../../../../globals/CircularProgress';
 import { updateUserById } from '../../../../../factory/users';
 
@@ -20,11 +21,11 @@ export default function FormDialog(props) {
         setSendObject,
         user,
         setUser,
-
+        alert,
+        setAlert
     } = useContext(context);
 
-    const [loading,
-        setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         document.getElementById("root").style.filter = 'blur(2px)';
@@ -63,13 +64,18 @@ export default function FormDialog(props) {
                 setOpenModalEdit(false);
             }
         } catch (error) {
-
+            setLoading(false);
+            setAlert({
+                severity: 'error',
+                message: error.message
+            });
         }
     }
 
     return (
         <div>
             <Dialog open={openModalEdit} onClose={() => { setOpenModalEdit(false) }} aria-labelledby="form-dialog-title">
+            {alert ? <Alert {...alert} context={AppContextProfessionals}></Alert> : null}
                 <DialogTitle id="form-dialog-title">Editar presentacion</DialogTitle>
                 <DialogContent>
                     <React.Fragment>
@@ -118,7 +124,7 @@ export default function FormDialog(props) {
                         disabled={loading}
                         color="secondary"
                         startIcon={loading ? <CircularProgress fontSize={'2px'} size={20} /> : <SaveIcon />}>
-                        Guardar
+                        { loading ? `Guardando` : `Guardar` }
                     </Button>
 
                 </DialogActions>

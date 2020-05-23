@@ -329,7 +329,7 @@ export default function TabsOfDays() {
         getDisponibilityUserBD(newValue);
     };
 
-    console.log(disponibilitiesUserBD);
+    // console.log(disponibilitiesUserBD);
 
     return (
         <AppContextDisponibility.Provider value={{

@@ -23,7 +23,6 @@ export default function Location(props) {
     useEffect(() => {
         
         async function regions() {
-            console.log(user);
             try {
                 let regions = await getRegions();
 
@@ -88,6 +87,8 @@ export default function Location(props) {
                     options={regions}
                     getOptionLabel={option => option.title}
                     value={values.region}
+                    loading
+                    loadingText={`Cargando...`}
                     onChange={async (event, newValue) => {
                         setProvincies([]);
                         setCommunes([]);
@@ -95,7 +96,7 @@ export default function Location(props) {
                         if (newValue) {
                             let provincies = await getProvincesRegion(newValue.id);
                             if(user) {
-                                setUser({ ...user, provincies, regionId: newValue.id, regionName: newValue.name });
+                                setUser({ ...user, provincies });
                             }
                             setProvincies(provincies)
                         }
@@ -119,13 +120,15 @@ export default function Location(props) {
                     options={provincies}
                     getOptionLabel={option => option.title}
                     value={values.provincie}
+                    loading
+                    loadingText={`Cargando...`}
                     onChange={async (event, newValue) => {
                         setCommunes([]);
                         setValues({ ...values, provincie: newValue, commune: null });
                         if (newValue) {
                             let communes = await getCommunesProvince(newValue.id);
                             if(user) {
-                                setUser({ ...user, communes, provinceName: newValue.name, provinceId: newValue.id });
+                                setUser({ ...user, communes });
                             }
                             setCommunes(communes);
                         }
@@ -148,12 +151,11 @@ export default function Location(props) {
                     options={communes}
                     getOptionLabel={option => option.title}
                     value={values.commune}
+                    loading
+                    loadingText={`Cargando...`}
                     onChange={(event, newValue) => {
                         setValues({ ...values, commune: newValue });
                         if (newValue) {
-                            if(user) {
-                                setUser({ ...user, communeId: newValue.id, communeName: newValue.name });
-                            }
                             setSendObject({ ...sendObject, communeId: newValue.id });
                         }
                     }}
