@@ -62,12 +62,12 @@ export default function Presentation() {
           communes[i]["title"] = communes[i].name;
         }
 
-        let findProvince = provincies.find(x => x.id === user.provinceId);
-        let findCommune = communes.find(x => x.id === user.communeId);
+        // let findProvince = provincies.find(x => x.id === user.provinceId);
+        // let findCommune = communes.find(x => x.id === user.communeId);
 
         user["communes"] = communes;
-        user["findProvince"] = findProvince;
-        user["findCommune"] = findCommune;
+        // user["findProvince"] = findProvince;
+        // user["findCommune"] = findCommune;
 
         setUser(user);
       } catch (error) {
@@ -82,10 +82,10 @@ export default function Presentation() {
 
   if (showProgressBackDrop) return (<ProgressBackDrop context={AppContextProfessionals}></ProgressBackDrop>);
 
-  console.log(user);
+  // console.log(user);
   return (
     <div className={classes.root}>
-      {openModalEdit && user ? <ModalEdit user={user} /> : null}
+      {openModalEdit && user ? <ModalEdit context={AppContextProfessionals} /> : null}
       <Grid container spacing={3}>
         <Grid item xs={12} style={{ background: "url('/img/globals/banner-medical.jpg')50%/cover", height: '150px' }}>
           <AccountCircleIcon style={{ fontSize: '170px', color: 'lightgrey', position: 'static', marginTop: '24px', background: 'white', borderRadius: '50%' }} />
@@ -103,7 +103,7 @@ export default function Presentation() {
                   </div>)
               }
               <div style={{ fontSize: '1.1rem', lineHeight: '1.33333', padding: '5px' }}>
-                {user && `${user?.provinceName}, Region ${user?.regionName}`}
+                {user && `${user?.communeName}, Region ${user?.regionName}`}
 
               </div>
             </Grid>

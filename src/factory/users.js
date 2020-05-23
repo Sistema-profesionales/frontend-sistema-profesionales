@@ -145,3 +145,27 @@ export async function loginUser(data) {
     return Promise.reject(error);
   }
 }
+
+
+export async function updateUserById(data, id) {
+  try {
+    const res = await fetch(`${BASE_URI_REST_API}/users/${id}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      const data = JSON.parse(await res.text());
+      let msg = [];
+      for (let k in data) msg = [...msg, ...data[k]];
+      throw Object({ status: res.status, message: msg.join("\n") });
+    }
+    return Promise.resolve(res.json());
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}

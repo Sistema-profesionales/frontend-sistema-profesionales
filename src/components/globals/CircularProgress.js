@@ -20,7 +20,19 @@ const useStyles = makeStyles(theme => ({
 
 export default function CircularProgressBar(props) {
   const classes = useStyles();
-  const { isCentered, size } = props;
+  const { isCentered, size, fontSize } = props;
+  const style = {};
+  if(isCentered) {
+    style["marginLeft"] = "50%";
+  } else {
+    style["marginLeft"] = "unset";
+  }
+
+  if(fontSize) {
+    style["fontSize"] = fontSize;
+  } else {
+    style["fontSize"] = "20px";
+  }
 
   // useEffect(() => {
   //   document.getElementById("root").style.filter = 'blur(2px)';
@@ -31,7 +43,7 @@ export default function CircularProgressBar(props) {
   // }, []);
 
   return (
-    <div className={classes.root} style={isCentered !== undefined && isCentered ? { marginLeft: '50%' } : { marginLeft: 'unset' }}>
+    <div className={classes.root} style={style}>
       <ColorCircularProgress className="loadingCircle" color="primary" size={size || 25} thickness={5} />
     </div>
   );

@@ -26,8 +26,6 @@ export default function StepPersonalData() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // console.log(sendObject);
-
     return (
         <React.Fragment>
             <Grid container spacing={2}>

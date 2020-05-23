@@ -8,31 +8,79 @@ import { TextField, Grid } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { AppContextProfessionals } from '../../../../../context/AppProfessionalsContext';
 import Location from '../../../../globals/Location';
+import Alert from '../../../../globals/Alert';
+import CircularProgress from '../../../../globals/CircularProgress';
+import { updateUserById } from '../../../../../factory/users';
 
 export default function FormDialog(props) {
-    const { user } = props;
-    const { 
-        openModalEdit, 
-        setOpenModalEdit, 
-        sendObject, 
-        setSendObject, 
-    } = useContext(AppContextProfessionals);
+    const { context } = props;
+    const {
+        openModalEdit,
+        setOpenModalEdit,
+        sendObject,
+        setSendObject,
+        user,
+        setUser,
+        alert,
+        setAlert
+    } = useContext(context);
+
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         document.getElementById("root").style.filter = 'blur(2px)';
 
+        setSendObject({ ...sendObject, email: user?.email, phone: user?.phone, communeId: user?.communeId });
+
         return () => {
             document.getElementById("root").style.filter = 'none';
         };
+        // eslint-disable-next-line
     }, []);
+
+    const handleForm = (event) => {
+        const { name, value } = event.target;
+        setSendObject({ ...sendObject, [name]: value });
+    }
+
+    const handleClickUpdate = async () => {
+        try {
+            setLoading(true);
+            let update = await updateUserById(sendObject, user.id);
+
+            if (update) {
+                setUser({
+                    ...user,
+                    email: update?.email,
+                    phone: update?.phone,
+                    regionId: update?.regionId,
+                    regionName: update?.regionName,
+                    provinceId: update?.provinceId,
+                    provinceName: update?.provinceName,
+                    communeId: update?.communeId,
+                    communeName: update?.communeName
+                });
+                setLoading(false);
+                setOpenModalEdit(false);
+            }
+        } catch (error) {
+            setLoading(false);
+            setAlert({
+                severity: 'error',
+                message: error.message
+            });
+        }
+    }
 
     return (
         <div>
             <Dialog open={openModalEdit} onClose={() => { setOpenModalEdit(false) }} aria-labelledby="form-dialog-title">
+            {alert ? <Alert {...alert} context={AppContextProfessionals}></Alert> : null}
                 <DialogTitle id="form-dialog-title">Editar presentacion</DialogTitle>
                 <DialogContent>
                     <React.Fragment>
                         <Grid container spacing={2}>
+                            {/* {loading && <CircularProgress isCentered={true} size={45} />} */}
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     defaultValue={user?.phone || ''}
@@ -42,7 +90,7 @@ export default function FormDialog(props) {
                                     label="Telefono"
                                     name="phone"
                                     fullWidth
-                                // onChange={handleChangeInputText}
+                                    onChange={handleForm}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -54,7 +102,7 @@ export default function FormDialog(props) {
                                     label="Correo electronico"
                                     name="email"
                                     fullWidth
-                                // onChange={handleChangeInputText}
+                                    onChange={handleForm}
                                 />
                             </Grid>
                             <Location context={AppContextProfessionals} />
@@ -62,20 +110,23 @@ export default function FormDialog(props) {
                     </React.Fragment>
                 </DialogContent>
                 <DialogActions>
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ marginRight: '10px' }}
                         onClick={() => { setOpenModalEdit(false) }}>
                         Cancelar
                     </Button>
                     <Button
                         style={{ backgroundColor: '#4caf50' }}
-                        // onClick={onAccept} 
+                        onClick={handleClickUpdate}
                         variant="contained"
+                        disabled={loading}
                         color="secondary"
-                        startIcon={<SaveIcon />}>
-                        Guardar
+                        startIcon={loading ? <CircularProgress fontSize={'2px'} size={20} /> : <SaveIcon />}>
+                        { loading ? `Guardando` : `Guardar` }
                     </Button>
+
                 </DialogActions>
             </Dialog>
         </div>
